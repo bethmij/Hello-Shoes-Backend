@@ -20,9 +20,7 @@ public class SuppliersDTO {
     @Pattern(regexp = "[A-Za-z ]+", message = "name is not valid")
     private String supplierName;
 
-    @NotBlank(message = "category can not be null")
     private Category category;
-
     private String addressLine01;
     private String addressLine02;
     private String addressLine03;
