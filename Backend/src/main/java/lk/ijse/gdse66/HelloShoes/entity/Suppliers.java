@@ -44,10 +44,10 @@ public class Suppliers {
     @Column(name = "country", nullable = false)
     private String addressLine06;
 
-    @Column(name = "contact_no",length = 15, nullable = false)
+    @Column(name = "contact_no1",length = 15, nullable = false)
     private String contactNo1;
 
-    @Column(name = "contact_no")
+    @Column(name = "contact_no2")
     private String contactNo2;
 
     @Column(unique = true, nullable = false)
