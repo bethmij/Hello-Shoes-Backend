@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class GenerateID {
+
     @Autowired
     SupplierRepo supplierRepo;
 

@@ -1,12 +1,14 @@
 package lk.ijse.gdse66.HelloShoes.service.util;
 
 import lk.ijse.gdse66.HelloShoes.dto.SuppliersDTO;
-import org.apache.logging.log4j.util.Supplier;
+import lk.ijse.gdse66.HelloShoes.entity.Suppliers;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Transformer {
+
+
 
     private final ModelMapper mapper;
 
@@ -14,12 +16,12 @@ public class Transformer {
         this.mapper = mapper;
     }
 
-    public SuppliersDTO fromSupplierEntity(Supplier supplier){
+    public SuppliersDTO fromSupplierEntity(Suppliers supplier){
         return mapper.map(supplier, SuppliersDTO.class);
     }
 
-    public Supplier toSupplierEntity(SuppliersDTO suppliersDTO){
-        return mapper.map(suppliersDTO, Supplier.class);
+    public Suppliers toSupplierEntity(SuppliersDTO suppliersDTO){
+        return mapper.map(suppliersDTO, Suppliers.class);
     }
 
 //    public ItemDTO fromItemEntity(Item item){
