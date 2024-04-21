@@ -1,8 +1,8 @@
 package lk.ijse.gdse66.HelloShoes.dto;
 
-import lk.ijse.gdse66.HelloShoes.service.util.Gender;
-import lk.ijse.gdse66.HelloShoes.service.util.Role;
-import lk.ijse.gdse66.HelloShoes.service.util.Status;
+import lk.ijse.gdse66.HelloShoes.service.util.enums.Gender;
+import lk.ijse.gdse66.HelloShoes.service.util.enums.Role;
+import lk.ijse.gdse66.HelloShoes.service.util.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

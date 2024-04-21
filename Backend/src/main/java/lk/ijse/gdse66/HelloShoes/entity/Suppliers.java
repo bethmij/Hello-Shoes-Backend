@@ -3,7 +3,7 @@ package lk.ijse.gdse66.HelloShoes.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lk.ijse.gdse66.HelloShoes.service.util.Category;
+import lk.ijse.gdse66.HelloShoes.service.util.enums.Category;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

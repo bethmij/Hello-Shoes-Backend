@@ -1,6 +1,6 @@
 package lk.ijse.gdse66.HelloShoes.dto;
 
-import lk.ijse.gdse66.HelloShoes.service.util.PaymentMethod;
+import lk.ijse.gdse66.HelloShoes.service.util.enums.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

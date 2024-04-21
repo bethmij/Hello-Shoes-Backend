@@ -1,6 +1,6 @@
 package lk.ijse.gdse66.HelloShoes.dto;
 
-import lk.ijse.gdse66.HelloShoes.service.util.Category;
+import lk.ijse.gdse66.HelloShoes.service.util.enums.Category;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
