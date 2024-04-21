@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AdminPanelDTO {
 
+    private String panel_id;
+
     @NotBlank(message = "total sales can not be null")
     @Pattern(regexp = "-?\\d+(\\.\\d+)?", message = "total sales is not valid")
     private double totalSales;
