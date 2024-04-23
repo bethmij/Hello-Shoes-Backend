@@ -3,13 +3,17 @@ package lk.ijse.gdse66.HelloShoes.entity;
 import jakarta.persistence.*;
 import lk.ijse.gdse66.HelloShoes.service.util.enums.ItemStatus;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -54,5 +58,8 @@ public class Inventory {
 
     @OneToMany(mappedBy = "inventory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<AdminPanel> adminPanels = new ArrayList<>();
+
+    @OneToMany(mappedBy = "inventory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<SaleItem> saleItems = new HashSet<>();
 
 }
