@@ -1,9 +1,11 @@
 package lk.ijse.gdse66.HelloShoes.service.util;
 
 import lk.ijse.gdse66.HelloShoes.dto.AdminPanelDTO;
+import lk.ijse.gdse66.HelloShoes.dto.EmployeeDTO;
 import lk.ijse.gdse66.HelloShoes.dto.SuppliersDTO;
 import lk.ijse.gdse66.HelloShoes.dto.UserDTO;
 import lk.ijse.gdse66.HelloShoes.entity.AdminPanel;
+import lk.ijse.gdse66.HelloShoes.entity.Employee;
 import lk.ijse.gdse66.HelloShoes.entity.Suppliers;
 import lk.ijse.gdse66.HelloShoes.entity.User;
 import org.modelmapper.ModelMapper;
@@ -40,6 +42,12 @@ public class Transformer {
 
     public User toUserEntity(UserDTO userDTO){
         return mapper.map(userDTO, User.class);
+    }
+
+    public EmployeeDTO fromEmployeeEntity(Employee employee){return mapper.map(employee, EmployeeDTO.class);}
+
+    public Employee toEmployeeEntity(EmployeeDTO employeeDTO){
+        return mapper.map(employeeDTO, Employee.class);
     }
 
 }

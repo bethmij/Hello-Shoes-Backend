@@ -27,7 +27,7 @@ public class GenerateID {
 
     }
 
-    public  String generateSEmployeeCode() {
+    public  String generateEmployeeCode() {
 
         try {
             String last_id =  employeeRepo.findFirstByOrderByEmployeeCodeDesc().getEmployeeCode();
