@@ -50,4 +50,10 @@ public class Transformer {
         return mapper.map(customersDTO, Customers.class);
     }
 
+    public InventoryDTO fromInventoryEntity(Inventory inventory){return mapper.map(inventory, InventoryDTO.class);}
+
+    public Inventory toInventoryEntity(InventoryDTO inventoryDTO){
+        return mapper.map(inventoryDTO, Inventory.class);
+    }
+
 }
