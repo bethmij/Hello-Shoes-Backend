@@ -1,13 +1,7 @@
 package lk.ijse.gdse66.HelloShoes.service.util;
 
-import lk.ijse.gdse66.HelloShoes.dto.AdminPanelDTO;
-import lk.ijse.gdse66.HelloShoes.dto.EmployeeDTO;
-import lk.ijse.gdse66.HelloShoes.dto.SuppliersDTO;
-import lk.ijse.gdse66.HelloShoes.dto.UserDTO;
-import lk.ijse.gdse66.HelloShoes.entity.AdminPanel;
-import lk.ijse.gdse66.HelloShoes.entity.Employee;
-import lk.ijse.gdse66.HelloShoes.entity.Suppliers;
-import lk.ijse.gdse66.HelloShoes.entity.User;
+import lk.ijse.gdse66.HelloShoes.dto.*;
+import lk.ijse.gdse66.HelloShoes.entity.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -48,6 +42,12 @@ public class Transformer {
 
     public Employee toEmployeeEntity(EmployeeDTO employeeDTO){
         return mapper.map(employeeDTO, Employee.class);
+    }
+
+    public CustomersDTO fromCustomerEntity(Customers customers){return mapper.map(customers, CustomersDTO.class);}
+
+    public Customers toCustomerEntity(CustomersDTO customersDTO){
+        return mapper.map(customersDTO, Customers.class);
     }
 
 }
