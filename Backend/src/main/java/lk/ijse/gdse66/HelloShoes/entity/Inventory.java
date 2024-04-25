@@ -1,7 +1,7 @@
 package lk.ijse.gdse66.HelloShoes.entity;
 
 import jakarta.persistence.*;
-import lk.ijse.gdse66.HelloShoes.service.util.enums.Category;
+import lk.ijse.gdse66.HelloShoes.service.util.enums.ItemStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,13 +26,12 @@ public class Inventory {
     @Column(name = "item_picture",columnDefinition = "LONGTEXT")
     private String itemPicture;
 
-    @Enumerated(EnumType.STRING)
-    private Category category;
+    private String category;
 
     private int size;
 
     @ManyToOne
-    @JoinColumn(name = "supplier_code", referencedColumnName = "supplier_code")
+    @JoinColumn(name = "supplier_code", referencedColumnName = "supplier_code", unique = true)
     private Suppliers suppliers;
 
     @Column(name = "supplier_name")
@@ -50,7 +49,8 @@ public class Inventory {
     @Column(name = "profit_margin")
     private double profitMargin;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ItemStatus status;
 
     @OneToMany(mappedBy = "inventory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<AdminPanel> adminPanels = new ArrayList<>();
