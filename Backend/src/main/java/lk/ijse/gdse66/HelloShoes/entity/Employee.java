@@ -84,6 +84,6 @@ public class Employee {
     private User user;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<SaleService> saleServices = new ArrayList<>();
+    private List<SaleServiceEntity> saleServiceEntities = new ArrayList<>();
 
 }
