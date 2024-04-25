@@ -1,6 +1,8 @@
 package lk.ijse.gdse66.HelloShoes.service.impl;
 
 import lk.ijse.gdse66.HelloShoes.dto.UserDTO;
+import lk.ijse.gdse66.HelloShoes.entity.Employee;
+import lk.ijse.gdse66.HelloShoes.repository.EmployeeRepo;
 import lk.ijse.gdse66.HelloShoes.repository.UserRepo;
 import lk.ijse.gdse66.HelloShoes.service.UserService;
 import lk.ijse.gdse66.HelloShoes.service.exception.NotFoundException;
@@ -17,6 +19,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepo userRepo;
+
+    @Autowired
+    EmployeeRepo employeeRepo;
 
     @Autowired
     Transformer transformer;
@@ -39,10 +44,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO saveUser(UserDTO userDTO) {
+        if(!employeeRepo.existsByEmail(userDTO.getEmail())){
+            throw new NotFoundException("User email: " + userDTO.getEmail() + " does not exist");
+        }
+
+        Employee employee = employeeRepo.findByEmail(userDTO.getEmail());
+        userDTO.setEmail(employee.getEmail());
 
         return transformer.fromUserEntity(
                 userRepo.save(
                         transformer.toUserEntity(userDTO)));
+
     }
 
     @Override
