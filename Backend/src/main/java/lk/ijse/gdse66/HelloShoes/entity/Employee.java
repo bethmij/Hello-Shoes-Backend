@@ -72,7 +72,7 @@ public class Employee {
     @Column(name = "contact_no", length = 15, nullable = false)
     private String contactNo;
 
-    @Column(name = "emaergency_contact", length = 10, nullable = false)
+    @Column(name = "emergency_contact", length = 10, nullable = false)
     private String emergencyContact;
 
     @Column(nullable = false, unique = true)
@@ -83,7 +83,7 @@ public class Employee {
     @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
     private User user;
 
-    @OneToMany(mappedBy = "suppliers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SaleService> saleServices = new ArrayList<>();
 
 }

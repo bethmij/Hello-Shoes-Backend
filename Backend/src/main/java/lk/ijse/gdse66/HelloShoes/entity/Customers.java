@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -63,5 +65,8 @@ public class Customers {
     @Column (name = "recent_purchase_date", columnDefinition = "DATE")
     @JsonFormat(pattern = "yyyyMMdd")
     private Date recentPurchaseDate;
+
+    @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SaleService> saleServices = new ArrayList<>();
 
 }
