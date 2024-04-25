@@ -2,8 +2,10 @@ package lk.ijse.gdse66.HelloShoes.service.util;
 
 import lk.ijse.gdse66.HelloShoes.dto.AdminPanelDTO;
 import lk.ijse.gdse66.HelloShoes.dto.SuppliersDTO;
+import lk.ijse.gdse66.HelloShoes.dto.UserDTO;
 import lk.ijse.gdse66.HelloShoes.entity.AdminPanel;
 import lk.ijse.gdse66.HelloShoes.entity.Suppliers;
+import lk.ijse.gdse66.HelloShoes.entity.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +34,12 @@ public class Transformer {
 
     public AdminPanel toAdminPanelEntity(AdminPanelDTO adminPanelDTO){
         return mapper.map(adminPanelDTO, AdminPanel.class);
+    }
+
+    public UserDTO fromUserEntity(User user){return mapper.map(user, UserDTO.class);}
+
+    public User toUserEntity(UserDTO userDTO){
+        return mapper.map(userDTO, User.class);
     }
 
 }

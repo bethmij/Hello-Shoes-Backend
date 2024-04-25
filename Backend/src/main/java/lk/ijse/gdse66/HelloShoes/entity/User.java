@@ -13,8 +13,10 @@ import lombok.NoArgsConstructor;
 @Table(name = "user")
 public class User {
 
-
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
     @OneToOne
     @JoinColumn(name = "email", referencedColumnName = "email")
     private Employee employee;
