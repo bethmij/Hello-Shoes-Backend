@@ -1,5 +1,6 @@
 package lk.ijse.gdse66.HelloShoes.service.util;
 
+import lk.ijse.gdse66.HelloShoes.repository.EmployeeRepo;
 import lk.ijse.gdse66.HelloShoes.repository.SupplierRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,9 @@ public class GenerateID {
 
     @Autowired
     SupplierRepo supplierRepo;
+
+    @Autowired
+    EmployeeRepo employeeRepo;
 
     public  String generateSupplerCode() {
 
@@ -23,30 +27,19 @@ public class GenerateID {
 
     }
 
-//    public  String generateItemCode() {
-//
-//        try {
-//            String last_id =  itemRepo.findFirstByOrderByItemCodeDesc().getItemCode();
-//            int latest_id = Integer.parseInt(last_id.split("I00-")[1])+1;
-//            return "I00-"+String.format("%03d",latest_id);
-//
-//        } catch (NullPointerException e) {
-//            return "I00-001";
-//        }
-//    }
+    public  String generateSEmployeeCode() {
 
-//    public  String generateOrderID() {
-
-       /* try {
-            String last_id = String.valueOf(orderRepo.findLastOrder().getOrderId());
-            int latest_id = Integer.parseInt(last_id.split("OR00-")[1])+1;
-            return "OR00-"+String.format("%03d",latest_id);
+        try {
+            String last_id =  employeeRepo.findFirstByOrderByEmployeeCodeDesc().getEmployeeCode();
+            int latest_id = Integer.parseInt(last_id.split("EP00-")[1])+1;
+            return "EP00-"+String.format("%03d",latest_id);
 
         } catch (NullPointerException e) {
-            return "OR00-001";
-        }*/
-//        return null;
+            return "EP00-001";
+        }
 
-//    }
+    }
+
+
 
 }
