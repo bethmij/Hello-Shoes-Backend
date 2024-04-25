@@ -39,15 +39,17 @@ public class EmployeeDTO {
 
     @NotNull(message = "attachedBranch code can not be null")
     private String attachedBranch;
-    private String AddressLine01;
-    private String AddressLine02;
 
-    @NotBlank(message = "AddressLine03 code can not be null")
-    private String AddressLine03;
-    private String AddressLine04;
+    private String addressLine01;
+    private String addressLine02;
 
-    @NotBlank(message = "AddressLine05 code can not be null")
-    private String AddressLine05;
+    @NotBlank(message = "addressLine03 code can not be null")
+    private String addressLine03;
+
+    private String addressLine04;
+
+    @NotBlank(message = "addressLine05 code can not be null")
+    private String addressLine05;
 
     @NotBlank(message = "contactNo code can not be null")
     private String contactNo;
