@@ -7,6 +7,9 @@ public interface CustomerRepo extends JpaRepository<Customers,String> {
 
     Customers findFirstByOrderByCustomerCodeDesc();
 
+    Customers findByCustomerName(String name);
+
+
 //    boolean existsByEmail(String email);
 //
 //    Customers findByEmail(String email);

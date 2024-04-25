@@ -67,6 +67,6 @@ public class Customers {
     private Date recentPurchaseDate;
 
     @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<SaleService> saleServices = new ArrayList<>();
+    private List<SaleServiceEntity> saleServiceEntities = new ArrayList<>();
 
 }
