@@ -37,24 +37,25 @@ public class EmployeeDTO {
     private Date dob;
     private Date dateJointed;
 
-    @NotNull(message = "attachedBranch code can not be null")
+    @NotNull(message = "attached branch code can not be null")
     private String attachedBranch;
 
     private String addressLine01;
     private String addressLine02;
 
-    @NotBlank(message = "addressLine03 code can not be null")
+    @NotBlank(message = "city code can not be null")
     private String addressLine03;
 
     private String addressLine04;
 
-    @NotBlank(message = "addressLine05 code can not be null")
+    @NotBlank(message = "postal  code can not be null")
+    @Pattern(regexp = "\\d+", message = "postal code is not valid")
     private String addressLine05;
 
-    @NotBlank(message = "contactNo code can not be null")
+    @NotBlank(message = "contact No code can not be null")
     private String contactNo;
 
-    @NotBlank(message = "emergencyContact code can not be null")
+    @NotBlank(message = "emergency contact code can not be null")
     private String emergencyContact;
 
     @NotBlank(message = "email code can not be null")

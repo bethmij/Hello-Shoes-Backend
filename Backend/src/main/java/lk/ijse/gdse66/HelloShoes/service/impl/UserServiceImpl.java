@@ -2,6 +2,7 @@ package lk.ijse.gdse66.HelloShoes.service.impl;
 
 import lk.ijse.gdse66.HelloShoes.dto.UserDTO;
 import lk.ijse.gdse66.HelloShoes.entity.Employee;
+import lk.ijse.gdse66.HelloShoes.entity.User;
 import lk.ijse.gdse66.HelloShoes.repository.EmployeeRepo;
 import lk.ijse.gdse66.HelloShoes.repository.UserRepo;
 import lk.ijse.gdse66.HelloShoes.service.UserService;
@@ -49,11 +50,12 @@ public class UserServiceImpl implements UserService {
         }
 
         Employee employee = employeeRepo.findByEmail(userDTO.getEmail());
-        userDTO.setEmail(employee.getEmail());
+
+        User userEntity = transformer.toUserEntity(userDTO);
+        userEntity.setEmployee(employee);
 
         return transformer.fromUserEntity(
-                userRepo.save(
-                        transformer.toUserEntity(userDTO)));
+                userRepo.save(userEntity));
 
     }
 

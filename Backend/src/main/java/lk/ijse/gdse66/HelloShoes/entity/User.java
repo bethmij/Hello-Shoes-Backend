@@ -18,7 +18,7 @@ public class User {
     private int id;
 
     @OneToOne
-    @JoinColumn(name = "email", referencedColumnName = "email")
+    @JoinColumn(name = "email", referencedColumnName = "email", unique = true)
     private Employee employee;
 
     @Column(nullable = false)
