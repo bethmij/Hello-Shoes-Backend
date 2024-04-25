@@ -15,7 +15,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "sale_service")
-public class SaleService {
+public class SaleServiceEntity {
 
     @Id
     @Column(name = "order_no")
