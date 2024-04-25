@@ -1,9 +1,13 @@
 package lk.ijse.gdse66.HelloShoes.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.sql.Date;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +20,11 @@ public class AdminPanel {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name = "panel_id")
     private int panelId;
+
+    @CreationTimestamp
+    @Column (unique = true, columnDefinition = "DATE")
+    @JsonFormat(pattern = "yyyyMMdd")
+    private Date date;
 
     @Column(name = "total_sales", nullable = false)
     private double totalSales;

@@ -1,32 +1,35 @@
 package lk.ijse.gdse66.HelloShoes.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.sql.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdminPanelDTO {
 
-    private String panel_id;
+    @JsonFormat(pattern = "yyyyMMdd")
+    private Date date;
 
-    @NotBlank(message = "total sales can not be null")
-    @Pattern(regexp = "-?\\d+(\\.\\d+)?", message = "total sales is not valid")
+    @NotNull(message = "total sales can not be null")
+    @Positive(message = "total sales must be greater than zero")
+    @DecimalMin(value = "0.0", inclusive = false, message = "total sales must be greater than zero")
     private double totalSales;
 
-    @NotBlank(message = "total profit can not be null")
-    @Pattern(regexp = "-?\\d+(\\.\\d+)?", message = "total profit is not valid")
-
+    @NotNull(message = "total profit can not be null")
+    @Positive(message = "total sales must be greater than zero")
+    @DecimalMin(value = "0.0", inclusive = false, message = "total profit must be greater than zero")
     private double totalProfit;
 
     @NotBlank(message = "most sale item can not be null")
     private String mostSaleItem;
     private String mostSaleItemPic;
 
-    @Pattern(regexp = "\\d+", message = "most sale item qty is not valid")
-
+    @Digits(integer = Integer.MAX_VALUE, fraction = 0, message = "most sale item qty must be a valid integer")
     private int mostSaleItemQty;
 }
