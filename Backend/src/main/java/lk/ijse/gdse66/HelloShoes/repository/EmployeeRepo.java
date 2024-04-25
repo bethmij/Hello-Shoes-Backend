@@ -6,4 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface EmployeeRepo extends JpaRepository<Employee,String> {
 
     Employee findFirstByOrderByEmployeeCodeDesc();
+
+    boolean existsByEmail(String email);
+
+    Employee findByEmail(String email);
 }
