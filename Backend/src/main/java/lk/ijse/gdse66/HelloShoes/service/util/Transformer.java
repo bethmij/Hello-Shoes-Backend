@@ -56,4 +56,10 @@ public class Transformer {
         return mapper.map(inventoryDTO, Inventory.class);
     }
 
+    public SaleServiceDTO fromSaleServiceEntity(SaleServiceEntity saleServiceEntity){return mapper.map(saleServiceEntity, SaleServiceDTO.class);}
+
+    public SaleServiceEntity toSaleServiceEntity(SaleServiceDTO saleServiceDTO){
+        return mapper.map(saleServiceDTO, SaleServiceEntity.class);
+    }
+
 }

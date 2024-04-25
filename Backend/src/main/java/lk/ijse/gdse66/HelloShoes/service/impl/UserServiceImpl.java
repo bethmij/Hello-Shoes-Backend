@@ -65,7 +65,12 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("User email: " + userDTO.getEmail() + " does not exist");
         }
 
-        userRepo.save(transformer.toUserEntity(userDTO));
+        Employee employee = employeeRepo.findByEmail(userDTO.getEmail());
+
+        User userEntity = transformer.toUserEntity(userDTO);
+        userEntity.setEmployee(employee);
+
+        userRepo.save(userEntity);
     }
 
     @Override
