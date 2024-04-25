@@ -25,14 +25,14 @@ public class SaleService {
     private String itemCode;
 
     @ManyToOne
-    @JoinColumn(name = "customer_name", referencedColumnName = "customer_name")
+    @JoinColumn(name = "customer_name", referencedColumnName = "customer_name", nullable = false)
     private Customers customers;
 
     @Column(name = "item_desc")
     private String itemDesc;
     private int size;
 
-    @Column(name = "unit_price")
+    @Column(name = "unit_price", nullable = false)
     private double unitPrice;
 
     @Column(name = "item_qty")
