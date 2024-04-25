@@ -33,7 +33,7 @@ public class AdminPanel {
     private double totalProfit;
 
     @ManyToOne
-    @JoinColumn(name = "most_sale_item")
+    @JoinColumn(name = "most_sale_item", referencedColumnName = "item_code")
     private Inventory inventory;
 
     @Column(name = "most_sale_pic", columnDefinition = "LONGTEXT")
