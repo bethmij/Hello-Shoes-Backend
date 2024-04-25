@@ -17,7 +17,7 @@ import java.util.List;
 public class Inventory {
 
     @Id
-    @Column(name = "itemCode")
+    @Column(name = "item_code")
     private String itemCode;
 
     @Column(name = "item_desc", columnDefinition = "LONGTEXT")
@@ -32,7 +32,7 @@ public class Inventory {
     private int size;
 
     @ManyToOne
-    @JoinColumn(name = "supplier_code")
+    @JoinColumn(name = "supplier_code", referencedColumnName = "supplier_code")
     private Suppliers suppliers;
 
     @Column(name = "supplier_name")
