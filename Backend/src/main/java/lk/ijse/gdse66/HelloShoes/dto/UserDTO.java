@@ -15,10 +15,8 @@ public class UserDTO {
     @NotBlank(message = "email not be null")
     private String email;
 
-
     @NotNull(message = "password can not be null")
     private String password;
-
 
     @NotNull(message = "role can not be null")
     private Role role;
