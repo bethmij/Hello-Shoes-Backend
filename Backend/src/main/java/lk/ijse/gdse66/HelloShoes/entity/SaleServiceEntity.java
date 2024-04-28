@@ -4,17 +4,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lk.ijse.gdse66.HelloShoes.service.util.enums.PaymentMethod;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -25,18 +21,28 @@ public class SaleServiceEntity {
     @Column(name = "order_no")
     private String orderNo;
 
-    @OneToMany(mappedBy = "saleService",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<SaleItem> saleItems = new HashSet<>();
+    @Column(name = "item_code")
+    private String itemCode;
 
     @ManyToOne
     @JoinColumn(name = "customer_name", referencedColumnName = "customer_name", nullable = false)
     private Customers customers;
 
+    @Column(name = "item_desc")
+    private String itemDesc;
+    private int size;
+
+    @Column(name = "unit_price", nullable = false)
+    private double unitPrice;
+
+    @Column(name = "item_qty")
+    private int itemQty;
+
     @Column(name = "total_price", nullable = false)
     private double totalPrice;
 
     @CreationTimestamp
-    @Column (columnDefinition = "DATE", nullable = false)
+    @Column (unique = true, columnDefinition = "DATE", nullable = false)
     @JsonFormat(pattern = "yyyyMMdd")
     private Date purchaseDate;
 

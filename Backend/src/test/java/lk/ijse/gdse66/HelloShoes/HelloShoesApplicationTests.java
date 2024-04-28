@@ -1,4 +1,4 @@
-package lk.ijse.gdse66.HelloShoes;
+package java.lk.ijse.gdse66.HelloShoes;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

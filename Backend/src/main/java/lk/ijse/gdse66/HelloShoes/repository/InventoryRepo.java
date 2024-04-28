@@ -9,6 +9,4 @@ public interface InventoryRepo extends JpaRepository<Inventory,String> {
 
     boolean existsBySuppliers_SupplierCode(String code);
 
-    Inventory findByItemCode(String code);
-
 }
