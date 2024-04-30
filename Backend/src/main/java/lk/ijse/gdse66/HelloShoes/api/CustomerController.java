@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/customer")
+@CrossOrigin
 public class CustomerController {
 
     @Autowired
@@ -30,7 +31,9 @@ public class CustomerController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public CustomersDTO saveCustomer( @Valid @RequestBody CustomersDTO customerDTO){
+//        System.out.println(customerDTO);
         return customerService.saveCustomers(customerDTO);
+//        return null;
     }
 
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
