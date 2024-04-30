@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/supplier")
+@CrossOrigin
 public class SupplierController {
 
     @Autowired
