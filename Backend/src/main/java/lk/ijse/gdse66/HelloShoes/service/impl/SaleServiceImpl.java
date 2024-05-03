@@ -1,12 +1,8 @@
 package lk.ijse.gdse66.HelloShoes.service.impl;
 
 import lk.ijse.gdse66.HelloShoes.dto.SaleServiceDTO;
-import lk.ijse.gdse66.HelloShoes.entity.Customers;
-import lk.ijse.gdse66.HelloShoes.entity.Employee;
-import lk.ijse.gdse66.HelloShoes.entity.SaleServiceEntity;
-import lk.ijse.gdse66.HelloShoes.repository.CustomerRepo;
-import lk.ijse.gdse66.HelloShoes.repository.EmployeeRepo;
-import lk.ijse.gdse66.HelloShoes.repository.SaleServiceRepo;
+import lk.ijse.gdse66.HelloShoes.entity.*;
+import lk.ijse.gdse66.HelloShoes.repository.*;
 import lk.ijse.gdse66.HelloShoes.service.SaleService;
 import lk.ijse.gdse66.HelloShoes.service.exception.NotFoundException;
 import lk.ijse.gdse66.HelloShoes.service.util.GenerateID;
@@ -16,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -35,6 +32,12 @@ public class SaleServiceImpl implements SaleService {
 
     @Autowired
     GenerateID generateID;
+
+    @Autowired
+    InventoryRepo inventoryRepo;
+
+    @Autowired
+    SaleInventoryRepo saleInventoryRepo;
 
 
     @Override
@@ -65,10 +68,20 @@ public class SaleServiceImpl implements SaleService {
         SaleServiceEntity saleService = transformer.toSaleServiceEntity(saleServiceDTO);
         saleService.setEmployee(employee);
         saleService.setCustomers(customers);
+        saleServiceRepo.save(saleService);
 
 
-        return transformer.fromSaleServiceEntity(
-                saleServiceRepo.save(saleService));
+        for (Map.Entry<String, Integer> entry : saleServiceDTO.getInventoryList().entrySet()) {
+            Inventory inventory = inventoryRepo.findById(entry.getKey()).get();
+            SaleInventory saleInventory = new SaleInventory();
+            saleInventory.setSaleService(saleService);
+            saleInventory.setInventory(inventory);
+            saleInventory.setSize(entry.getValue());
+            saleInventory.setPrize(entry.getValue()*inventory.getSaleUnitPrice());
+            saleInventoryRepo.save(saleInventory);
+        }
+
+        return transformer.fromSaleServiceEntity(saleService);
 
     }
 

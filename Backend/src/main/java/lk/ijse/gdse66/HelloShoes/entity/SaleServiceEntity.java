@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -21,22 +23,22 @@ public class SaleServiceEntity {
     @Column(name = "order_no")
     private String orderNo;
 
-    @Column(name = "item_code")
-    private String itemCode;
+    @OneToMany(mappedBy = "saleService")
+    private Set<SaleInventory> saleInventories = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "customer_name", referencedColumnName = "customer_name", nullable = false)
     private Customers customers;
 
-    @Column(name = "item_desc")
-    private String itemDesc;
-    private int size;
+//    @Column(name = "item_desc")
+//    private String itemDesc;
+//    private int size;
 
-    @Column(name = "unit_price", nullable = false)
-    private double unitPrice;
+//    @Column(name = "unit_price", nullable = false)
+//    private double unitPrice;
 
-    @Column(name = "item_qty")
-    private int itemQty;
+//    @Column(name = "item_qty")
+//    private int itemQty;
 
     @Column(name = "total_price", nullable = false)
     private double totalPrice;
