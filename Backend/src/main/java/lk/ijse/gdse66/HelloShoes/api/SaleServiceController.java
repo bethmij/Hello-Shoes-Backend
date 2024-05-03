@@ -30,8 +30,10 @@ public class SaleServiceController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public SaleServiceDTO saveSaleService( @Valid @RequestBody SaleServiceDTO SaleServiceDTO){
-        return saleService.saveSaleService(SaleServiceDTO);
+    public SaleServiceDTO saveSaleService( @Valid @RequestBody SaleServiceDTO saleServiceDTO){
+        return saleService.saveSaleService(saleServiceDTO);
+//        System.out.println(saleServiceDTO);
+//        return null;
     }
 
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
