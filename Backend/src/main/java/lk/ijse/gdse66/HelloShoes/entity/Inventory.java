@@ -7,7 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -54,5 +56,8 @@ public class Inventory {
 
     @OneToMany(mappedBy = "inventory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<AdminPanel> adminPanels = new ArrayList<>();
+
+    @OneToMany(mappedBy = "inventory")
+    private Set<SaleInventory> saleInventories = new HashSet<>();
 
 }

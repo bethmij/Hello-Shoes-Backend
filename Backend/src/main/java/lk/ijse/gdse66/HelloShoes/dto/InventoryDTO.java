@@ -1,6 +1,7 @@
 package lk.ijse.gdse66.HelloShoes.dto;
 
 import jakarta.validation.constraints.*;
+import lk.ijse.gdse66.HelloShoes.service.util.enums.ItemStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,7 +40,7 @@ public class InventoryDTO {
     private double expectedProfit;
     private double profitMargin;
 
-    @NotBlank(message = "status can not be null")
-    private String status;
+    @NotNull(message = "status can not be null")
+    private ItemStatus status;
 
 }
