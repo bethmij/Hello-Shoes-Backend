@@ -10,8 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -83,7 +81,7 @@ public class Employee {
     @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
     private User user;
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<SaleServiceEntity> saleServiceEntities = new ArrayList<>();
+//    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<SaleServiceEntity> saleServiceEntities = new ArrayList<>();
 
 }
