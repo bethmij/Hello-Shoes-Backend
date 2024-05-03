@@ -7,10 +7,10 @@ import lk.ijse.gdse66.HelloShoes.service.util.enums.Level;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
@@ -62,11 +62,11 @@ public class Customers {
 
     private String email;
 
-    @Column (name = "recent_purchase_date", columnDefinition = "DATE")
-    @JsonFormat(pattern = "yyyyMMdd")
-    private Date recentPurchaseDate;
+    @Column (name = "recent_purchase_date")
+    @CreationTimestamp
+    private Timestamp recentPurchaseDate;
 
-    @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<SaleServiceEntity> saleServiceEntities = new ArrayList<>();
+//    @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<SaleServiceEntity> saleServiceEntities = new ArrayList<>();
 
 }
