@@ -1,5 +1,6 @@
 package lk.ijse.gdse66.HelloShoes.service.impl;
 
+import lk.ijse.gdse66.HelloShoes.dto.SaleInventoryDTO;
 import lk.ijse.gdse66.HelloShoes.dto.SaleServiceDTO;
 import lk.ijse.gdse66.HelloShoes.entity.*;
 import lk.ijse.gdse66.HelloShoes.repository.*;
@@ -43,13 +44,34 @@ public class SaleServiceImpl implements SaleService {
     @Override
     public List<SaleServiceDTO> getAllSaleService() {
         return saleServiceRepo.findAll().stream()
-                .map(saleService -> transformer.fromSaleServiceEntity(saleService))
+                .map(saleService -> {
+
+                    Customers customers = customerRepo.findByCustomerName(saleService.getCustomers().getCustomerName());
+                    Employee employee = employeeRepo.findByEmployeeName(saleService.getEmployee().getEmployeeName());
+
+                    List<SaleInventoryDTO> saleInventories = saleInventoryRepo.findBySaleService_OrderNo(saleService.getOrderNo())
+                            .stream().map(saleInventory -> {
+
+                                SaleInventoryDTO saleInventoryDTO = transformer.fromSaleInventoryEntity(saleInventory);
+                                saleInventoryDTO.setItemCode(saleInventory.getInventory().getItemCode());
+                                saleInventoryDTO.setOrderID(saleInventory.getSaleService().getOrderNo());
+                                return saleInventoryDTO;
+
+                            }).toList();
+
+                    SaleServiceDTO saleServiceDTO = transformer.fromSaleServiceEntity(saleService);
+                    saleServiceDTO.setCustomerName(customers.getCustomerName());
+                    saleServiceDTO.setCashier(employee.getEmployeeName());
+                    saleServiceDTO.setSaleInventory(saleInventories);
+
+                    return saleServiceDTO;
+                })
                 .toList();
     }
 
     @Override
     public SaleServiceDTO getSaleServiceDetails(String id) {
-        if(!saleServiceRepo.existsById(id)){
+        if (!saleServiceRepo.existsById(id)) {
             throw new NotFoundException("Order no: " + id + " does not exist");
         }
 
@@ -77,7 +99,7 @@ public class SaleServiceImpl implements SaleService {
             saleInventory.setSaleService(saleService);
             saleInventory.setInventory(inventory);
             saleInventory.setSize(entry.getValue());
-            saleInventory.setPrize(entry.getValue()*inventory.getSaleUnitPrice());
+            saleInventory.setPrize(entry.getValue() * inventory.getSaleUnitPrice());
             saleInventoryRepo.save(saleInventory);
         }
 
@@ -87,7 +109,7 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public void updateSaleService(SaleServiceDTO saleServiceDTO) {
-        if(!saleServiceRepo.existsById(saleServiceDTO.getOrderNo())){
+        if (!saleServiceRepo.existsById(saleServiceDTO.getOrderNo())) {
             throw new NotFoundException("Order no: " + saleServiceDTO.getOrderNo() + " does not exist");
         }
 
@@ -103,7 +125,7 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public void deleteSaleService(String id) {
-        if(!saleServiceRepo.existsById(id)){
+        if (!saleServiceRepo.existsById(id)) {
             throw new NotFoundException("Order no: " + id + " does not exist");
         }
         saleServiceRepo.deleteById(id);
