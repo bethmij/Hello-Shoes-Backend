@@ -44,7 +44,7 @@ public class SaleServiceEntity {
     private double totalPrice;
 
     @CreationTimestamp
-    @Column (unique = true, columnDefinition = "DATE", nullable = false)
+    @Column ( columnDefinition = "DATE", nullable = false)
     @JsonFormat(pattern = "yyyyMMdd")
     private Date purchaseDate;
 

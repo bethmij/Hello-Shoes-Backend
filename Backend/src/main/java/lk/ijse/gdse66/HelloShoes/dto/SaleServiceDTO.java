@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -51,5 +52,7 @@ public class SaleServiceDTO {
 
     @NotBlank(message = "cashier can not be null")
     private String cashier;
+
+    private List<SaleInventoryDTO> saleInventory;
 
 }
