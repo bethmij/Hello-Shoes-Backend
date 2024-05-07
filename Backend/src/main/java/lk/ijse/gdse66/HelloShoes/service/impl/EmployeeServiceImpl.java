@@ -70,6 +70,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     }
 
+    @Override
+    public List<String> getEmployeeCodes() {
+        return employeeRepo.findAllIds();
+    }
+
+    @Override
+    public String getNameByID(String id) {
+        return employeeRepo.findById(id).get().getEmployeeName();
+    }
+
+    @Override
+    public String getEmployeeCode() {
+        return generateID.generateEmployeeCode();
+    }
+
+
 //    @Override
 //    public List<String> GetSupplierCode() {
 //        return null;
