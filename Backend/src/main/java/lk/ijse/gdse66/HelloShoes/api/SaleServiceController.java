@@ -1,6 +1,7 @@
 package lk.ijse.gdse66.HelloShoes.api;
 
 import jakarta.validation.Valid;
+import lk.ijse.gdse66.HelloShoes.dto.SaleInventoryDTO;
 import lk.ijse.gdse66.HelloShoes.dto.SaleServiceDTO;
 import lk.ijse.gdse66.HelloShoes.service.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,20 @@ public class SaleServiceController {
         return saleService.getSaleServiceDetails(id);
     }
 
+    @GetMapping(path = "/nextID")
+    public String getOrderID(){
+        return saleService.getOrderID();
+    }
+
+    @GetMapping(path = "/getItem/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<SaleInventoryDTO> getAllSaleService(@PathVariable("id") String id){
+        return saleService.getSaleInventory(id);
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public SaleServiceDTO saveSaleService( @Valid @RequestBody SaleServiceDTO saleServiceDTO){
         return saleService.saveSaleService(saleServiceDTO);
-//        System.out.println(saleServiceDTO);
-//        return null;
     }
 
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
