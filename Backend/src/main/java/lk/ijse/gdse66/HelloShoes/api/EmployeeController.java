@@ -23,6 +23,21 @@ public class EmployeeController {
         return employeeService.getAllEmployees();
     }
 
+    @GetMapping(value ="/getIDs")
+    public List<String> getAllInventoryIDs(){
+        return employeeService.getEmployeeCodes();
+    }
+
+    @GetMapping(path = "/nextID")
+    public String getEmployeeCode(){
+        return employeeService.getEmployeeCode();
+    }
+
+    @GetMapping(value ="/getName/{id}")
+    public String getEmployeeName(@PathVariable("id") String id){
+        return employeeService.getNameByID(id);
+    }
+
     @GetMapping(path = "/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
     public EmployeeDTO getEmployeeByEmail(@PathVariable("code") String code){
         return employeeService.getEmployeeDetails(code);
