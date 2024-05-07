@@ -88,6 +88,11 @@ public class InventoryServiceImpl implements InventoryService {
 
     }
 
+    @Override
+    public List<String> getAllItemCodes() {
+        return inventoryRepo.findAllIds();
+    }
+
 //    @Override
 //    public List<String> GetSupplierCode() {
 //        return null;
