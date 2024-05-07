@@ -18,7 +18,7 @@ public class SaleInventory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private int size;
+    private int qty;
 
     private double prize;
 

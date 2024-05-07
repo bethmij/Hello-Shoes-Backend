@@ -17,6 +17,12 @@ public class SaleInventoryDTO {
 
     private int size;
 
+    private int qty;
+
+    private double unitPrice;
+
+    private String itemDesc;
+
     private double prize;
 
 }
