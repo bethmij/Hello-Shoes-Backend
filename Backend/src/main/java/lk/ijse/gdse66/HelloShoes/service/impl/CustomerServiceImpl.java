@@ -70,6 +70,21 @@ public class CustomerServiceImpl implements CustomerService {
 
     }
 
+    @Override
+    public List<String> getCustomersCodes() {
+        return customerRepo.findAllIds();
+    }
+
+    @Override
+    public String getNameByID(String id) {
+        return customerRepo.findById(id).get().getCustomerName();
+    }
+
+    @Override
+    public String getCustomerCode() {
+        return generateID.generateCustomerCode();
+    }
+
 //    @Override
 //    public List<String> GetSupplierCode() {
 //        return null;

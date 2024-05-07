@@ -15,5 +15,9 @@ public interface CustomerService {
 
     void deleteCustomers(String id);
 
-//    List<String> GetCustomersCode();
+    List<String> getCustomersCodes();
+
+    String getNameByID(String id);
+
+    String getCustomerCode();
 }
