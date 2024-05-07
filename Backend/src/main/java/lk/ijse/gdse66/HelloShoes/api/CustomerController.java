@@ -23,6 +23,21 @@ public class CustomerController {
         return customerService.getAllCustomers();
     }
 
+    @GetMapping(value ="/getIDs")
+    public List<String> getAllInventoryIDs(){
+        return customerService.getCustomersCodes();
+    }
+
+    @GetMapping(path = "/nextID")
+    public String getCustomerCode(){
+        return customerService.getCustomerCode();
+    }
+
+    @GetMapping(value ="/getName/{id}")
+    public String getCustomerName(@PathVariable("id") String id){
+        return customerService.getNameByID(id);
+    }
+
     @GetMapping(path = "/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CustomersDTO getCustomerByEmail(@PathVariable("code") String code){
         return customerService.getCustomersDetails(code);
