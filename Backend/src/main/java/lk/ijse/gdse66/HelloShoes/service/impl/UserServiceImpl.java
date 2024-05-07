@@ -9,10 +9,14 @@ import lk.ijse.gdse66.HelloShoes.service.UserService;
 import lk.ijse.gdse66.HelloShoes.service.exception.NotFoundException;
 import lk.ijse.gdse66.HelloShoes.service.util.Transformer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -27,6 +31,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     Transformer transformer;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Override
     public List<UserDTO> getAllUsers() {
         return userRepo.findAll().stream()
@@ -35,17 +42,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserDetails(String email) {
-        if(userRepo.existsByEmployee_Email(email)){
+        if (userRepo.existsByEmployee_Email(email)) {
             throw new NotFoundException("User email: " + email + " does not exist");
         }
 
-        return transformer.fromUserEntity(userRepo.findByEmployee_Email(email));
+        return transformer.fromUserEntity(userRepo.findByEmployee_Email(email).get());
 
     }
 
     @Override
     public UserDTO saveUser(UserDTO userDTO) {
-        if(!employeeRepo.existsByEmail(userDTO.getEmail())){
+        if (!employeeRepo.existsByEmail(userDTO.getEmail())) {
             throw new NotFoundException("User email: " + userDTO.getEmail() + " does not exist");
         }
 
@@ -61,7 +68,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(UserDTO userDTO) {
-        if(userRepo.existsByEmployee_Email(userDTO.getEmail())){
+        if (userRepo.existsByEmployee_Email(userDTO.getEmail())) {
             throw new NotFoundException("User email: " + userDTO.getEmail() + " does not exist");
         }
 
@@ -75,15 +82,48 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(String email) {
-        if(userRepo.existsByEmployee_Email(email)){
+        if (userRepo.existsByEmployee_Email(email)) {
             throw new NotFoundException("User email: " + email + " does not exist");
         }
         userRepo.deleteByEmployee_Email(email);
 
     }
 
+    @Override
+    public boolean checkPassword(UserDTO req) {
+        Optional<User> details = userRepo.findByEmployee_Email(req.getEmail());
+        if (details.isPresent()) {
+            boolean matches = passwordEncoder.matches(req.getPassword(), details.get().getPassword());
+            if (matches) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+//    @Override
+//    public List<UserDTO> findAllByRole(String role) {
+//        if ("USER".equals(role)) {
+//            return transformer.convert(userRepo.findAllByRole(Role.USER), Tranformer.ClassType.USER_DTO_LIST);
+//        } else if ("ADMIN".equals(role)) {
+//            return transformer.convert(userRepo.findAllByRole(Role.ADMIN), Tranformer.ClassType.USER_DTO_LIST);
+//        } else {
+//            throw new NotFoundException("Not : "+role+" role");
+//        }
+//    }
+
+    @Override
+    public UserDetailsService userDetailService() {
+        return username ->
+                userRepo.findByEmployee_Email(username).
+                        orElseThrow(() ->
+                                new UsernameNotFoundException("user not found"));
+    }
+}
+
+
 //    @Override
 //    public List<String> GetSupplierCode() {
 //        return null;
 //    }
-}
+
