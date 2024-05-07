@@ -23,6 +23,11 @@ public class InventoryController {
         return inventoryService.getAllInventory();
     }
 
+    @GetMapping(value ="/getIDs")
+    public List<String> getAllInventoryIDs(){
+        return inventoryService.getAllItemCodes();
+    }
+
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public InventoryDTO getInventoryById(@PathVariable("id") String id){
         return inventoryService.getInventoryDetails(id);
