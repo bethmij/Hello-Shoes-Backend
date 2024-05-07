@@ -49,20 +49,9 @@ public class SaleServiceImpl implements SaleService {
                     Customers customers = customerRepo.findByCustomerName(saleService.getCustomers().getCustomerName());
                     Employee employee = employeeRepo.findByEmployeeName(saleService.getEmployee().getEmployeeName());
 
-                    List<SaleInventoryDTO> saleInventories = saleInventoryRepo.findBySaleService_OrderNo(saleService.getOrderNo())
-                            .stream().map(saleInventory -> {
-
-                                SaleInventoryDTO saleInventoryDTO = transformer.fromSaleInventoryEntity(saleInventory);
-                                saleInventoryDTO.setItemCode(saleInventory.getInventory().getItemCode());
-                                saleInventoryDTO.setOrderID(saleInventory.getSaleService().getOrderNo());
-                                return saleInventoryDTO;
-
-                            }).toList();
-
                     SaleServiceDTO saleServiceDTO = transformer.fromSaleServiceEntity(saleService);
                     saleServiceDTO.setCustomerName(customers.getCustomerName());
                     saleServiceDTO.setCashier(employee.getEmployeeName());
-                    saleServiceDTO.setSaleInventory(saleInventories);
 
                     return saleServiceDTO;
                 })
@@ -77,6 +66,24 @@ public class SaleServiceImpl implements SaleService {
 
         return transformer.fromSaleServiceEntity(saleServiceRepo.findById(id).get());
 
+    }
+
+    @Override
+    public List<SaleInventoryDTO> getSaleInventory(String orderNo) {
+
+        SaleServiceEntity saleService = saleServiceRepo.findById(orderNo).get();
+
+        return saleInventoryRepo.findBySaleService_OrderNo(saleService.getOrderNo())
+                .stream().map(saleInventory -> {
+
+                    SaleInventoryDTO saleInventoryDTO = transformer.fromSaleInventoryEntity(saleInventory);
+                    saleInventoryDTO.setItemCode(saleInventory.getInventory().getItemCode());
+                    saleInventoryDTO.setOrderID(saleInventory.getSaleService().getOrderNo());
+                    saleInventoryDTO.setSize(saleInventory.getInventory().getSize());
+                    saleInventoryDTO.setUnitPrice(saleInventory.getInventory().getSaleUnitPrice());
+                    saleInventoryDTO.setItemDesc(saleInventory.getInventory().getItemDesc());
+                    return saleInventoryDTO;
+                }).toList();
     }
 
     @Override
@@ -98,7 +105,7 @@ public class SaleServiceImpl implements SaleService {
             SaleInventory saleInventory = new SaleInventory();
             saleInventory.setSaleService(saleService);
             saleInventory.setInventory(inventory);
-            saleInventory.setSize(entry.getValue());
+            saleInventory.setQty(entry.getValue());
             saleInventory.setPrize(entry.getValue() * inventory.getSaleUnitPrice());
             saleInventoryRepo.save(saleInventory);
         }
@@ -130,6 +137,11 @@ public class SaleServiceImpl implements SaleService {
         }
         saleServiceRepo.deleteById(id);
 
+    }
+
+    @Override
+    public String getOrderID() {
+        return generateID.generateSaleCode();
     }
 
 //    @Override

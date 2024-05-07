@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
-import java.util.List;
 import java.util.Map;
 
 @Data
@@ -21,21 +20,10 @@ public class SaleServiceDTO {
     private String orderNo;
 
     private Map<String, Integer> inventoryList;
- //    private String itemCode;
 
     @NotBlank(message = "customer name can not be null")
     @Pattern(regexp = "[A-Za-z ]+", message = "name is not valid")
     private String customerName;
-//    private String itemDesc;
-//    private int size;
-
-//    @NotNull(message = "unit price can not be null")
-//    @Positive(message = "unit price must be greater than zero")
-//    @DecimalMin(value = "0.0", inclusive = false, message = "unit price must be greater than zero")
-//    private double unitPrice;
-
-//    @Digits(integer = Integer.MAX_VALUE, fraction = 0, message = "item qty must be a valid integer")
-//    private int itemQty;
 
     @NotNull(message = "total price can not be null")
     @Positive(message = "total price must be greater than zero")
@@ -43,7 +31,6 @@ public class SaleServiceDTO {
     private double totalPrice;
 
     @JsonFormat(pattern = "yyyyMMdd")
-    @NotNull(message = "purchase date can not be null")
     private Date purchaseDate;
 
     @NotNull(message = "payment method can not be null")
@@ -53,6 +40,5 @@ public class SaleServiceDTO {
     @NotBlank(message = "cashier can not be null")
     private String cashier;
 
-    private List<SaleInventoryDTO> saleInventory;
 
 }
