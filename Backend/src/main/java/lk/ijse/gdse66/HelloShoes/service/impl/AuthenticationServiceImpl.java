@@ -1,17 +1,20 @@
 package lk.ijse.gdse66.HelloShoes.service.impl;
 
-
 import lk.ijse.gdse66.HelloShoes.auth.request.SignInRequest;
 import lk.ijse.gdse66.HelloShoes.auth.request.SignUpRequest;
 import lk.ijse.gdse66.HelloShoes.auth.response.JwtAuthResponse;
 import lk.ijse.gdse66.HelloShoes.dto.UserDTO;
+import lk.ijse.gdse66.HelloShoes.entity.Employee;
 import lk.ijse.gdse66.HelloShoes.entity.User;
+import lk.ijse.gdse66.HelloShoes.repository.EmployeeRepo;
 import lk.ijse.gdse66.HelloShoes.repository.UserRepo;
 import lk.ijse.gdse66.HelloShoes.service.AuthenticationService;
 import lk.ijse.gdse66.HelloShoes.service.JwtService;
-import lk.ijse.gdse66.HelloShoes.service.util.enums.Role;
+import lk.ijse.gdse66.HelloShoes.service.exception.NotFoundException;
+import lk.ijse.gdse66.HelloShoes.service.util.Transformer;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,38 +30,40 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final ModelMapper mapper;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    @Autowired
+    EmployeeRepo employeeRepo;
+
+    @Autowired
+    Transformer transformer;
 
     @Override
     public JwtAuthResponse signIn(SignInRequest signInRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getEmail(), signInRequest.getPassword()));
         User user = userRepo.findByEmployee_Email(signInRequest.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
-            String generatedToken = jwtService.generateToken(user);
+        String generatedToken = jwtService.generateToken(user);
         return JwtAuthResponse.builder().token(generatedToken).build();
     }
 
     @Override
     public JwtAuthResponse signUp(SignUpRequest signUpRequest) {
+
+        if (!employeeRepo.existsByEmail(signUpRequest.getEmail())) {
+            throw new NotFoundException("User email: " + signUpRequest.getEmail() + " does not exist");
+        }
+
+        Employee employee = employeeRepo.findByEmail(signUpRequest.getEmail());
+
         UserDTO userDTO = UserDTO.builder()
                 .email(signUpRequest.getEmail())
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
-                .role(Role.valueOf(signUpRequest.getRole()))
+                .role(signUpRequest.getRole())
                 .build();
-        User savedUser = userRepo.save(mapper.map(userDTO, User.class));
+        User userEntity = transformer.toUserEntity(userDTO);
+        userEntity.setEmployee(employee);
+
+        User savedUser = userRepo.save(userEntity);
         String generatedToken = jwtService.generateToken(savedUser);
         return JwtAuthResponse.builder().token(generatedToken).build();
     }
-
 }
-    /*User user = userRepo.findByEmail(signInRequest.getEmail())
-            .map(userCheck -> {
-                boolean matches = passwordEncoder.matches(signInRequest.getPassword(), userCheck.getPassword());
-                if (!matches) {
-                    new PassordNotFoundException("user not found")
-                    System.out.println("Password matches!");
-                } else {
-                    System.out.println("Password does not match!");
-                }
-
-            })
-            .orElseThrow(() -> new UsernameNotFoundException("user not found"));*/
