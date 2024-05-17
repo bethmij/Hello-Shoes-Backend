@@ -11,12 +11,10 @@ import lk.ijse.gdse66.HelloShoes.service.util.Transformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -31,8 +29,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     Transformer transformer;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserDTO> getAllUsers() {
@@ -89,17 +85,17 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    public boolean checkPassword(UserDTO req) {
-        Optional<User> details = userRepo.findByEmployee_Email(req.getEmail());
-        if (details.isPresent()) {
-            boolean matches = passwordEncoder.matches(req.getPassword(), details.get().getPassword());
-            if (matches) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    @Override
+//    public boolean checkPassword(UserDTO req) {
+//        Optional<User> details = userRepo.findByEmployee_Email(req.getEmail());
+//        if (details.isPresent()) {
+//            boolean matches = passwordEncoder.matches(req.getPassword(), details.get().getPassword());
+//            if (matches) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
 //    @Override
 //    public List<UserDTO> findAllByRole(String role) {

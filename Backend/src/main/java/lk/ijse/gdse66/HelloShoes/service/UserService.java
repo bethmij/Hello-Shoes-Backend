@@ -16,7 +16,7 @@ public interface UserService {
 
     void deleteUser(String email);
 
-    boolean checkPassword(UserDTO req);
+//    boolean checkPassword(UserDTO req);
 
 //    List<UserDTO> findAllByRole(String role);
 
