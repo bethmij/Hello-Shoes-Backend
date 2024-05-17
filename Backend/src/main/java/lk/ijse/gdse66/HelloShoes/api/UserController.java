@@ -1,19 +1,28 @@
 package lk.ijse.gdse66.HelloShoes.api;
 
+
 import jakarta.validation.Valid;
+import lk.ijse.gdse66.HelloShoes.auth.request.SignInRequest;
+import lk.ijse.gdse66.HelloShoes.auth.request.SignUpRequest;
+import lk.ijse.gdse66.HelloShoes.auth.response.JwtAuthResponse;
 import lk.ijse.gdse66.HelloShoes.dto.UserDTO;
+import lk.ijse.gdse66.HelloShoes.service.AuthenticationService;
 import lk.ijse.gdse66.HelloShoes.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
-@CrossOrigin
+@RequestMapping("user")
+@RequiredArgsConstructor
 public class UserController {
+
+    private final AuthenticationService authenticationService;
 
     @Autowired
     UserService userService;
@@ -46,5 +55,17 @@ public class UserController {
         userService.deleteUser(email);
     }
 
+    @PostMapping("/signin")
+    public ResponseEntity<JwtAuthResponse> signIn(
+            @RequestBody SignInRequest signInRequest){
+        return ResponseEntity.ok(
+                authenticationService.signIn(signInRequest));
+    }
 
+    @PostMapping("/signup")
+    public ResponseEntity<JwtAuthResponse> signUp(
+            @RequestBody SignUpRequest signUpRequest){
+        return ResponseEntity.ok(
+                authenticationService.signUp(signUpRequest));
+    }
 }
