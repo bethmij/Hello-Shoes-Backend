@@ -25,12 +25,12 @@ public class JwtConfigurationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authorizationHeader = request.getHeader("Authorization");
+        String authorizationHeader = request.getHeader("Authorization"); // get the value of the Authorization header
 
-
+        // validate Authorization header
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
-            String jwt = authorizationHeader.substring(7);
-            String extractedUserName = jwtService.extractUserName(jwt);
+            String jwt = authorizationHeader.substring(7); // extract the JWT token from the Authorization header
+            String extractedUserName = jwtService.extractUserName(jwt); //extract the username from the JWT
 
             // check if username extracted from JWT is not null and there is no existing authenticated user in the security context
             if(extractedUserName != null && SecurityContextHolder.getContext().getAuthentication()==null){
