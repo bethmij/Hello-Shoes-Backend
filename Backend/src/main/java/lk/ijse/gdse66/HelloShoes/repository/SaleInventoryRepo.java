@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface SaleInventoryRepo extends JpaRepository<SaleInventory, String> {
 
-    List<SaleInventory> findBySaleService_OrderNo(String orderNo);
+    List<SaleInventory> findBySaleService_OrderID(String orderNo);
 }
