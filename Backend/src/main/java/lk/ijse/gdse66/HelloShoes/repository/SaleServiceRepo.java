@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SaleServiceRepo extends JpaRepository<SaleServiceEntity,String> {
 
-    SaleServiceEntity findFirstByOrderByOrderNoDesc();
+    SaleServiceEntity findFirstByOrderByOrderIDDesc();
 
 //    boolean existsBySuppliers_SupplierCode(String code);
 
