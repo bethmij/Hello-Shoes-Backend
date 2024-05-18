@@ -73,7 +73,7 @@ public class GenerateID {
     public  String generateSaleCode() {
 
         try {
-            String last_id =  saleServiceRepo.findFirstByOrderByOrderNoDesc().getOrderNo();
+            String last_id =  saleServiceRepo.findFirstByOrderByOrderIDDesc().getOrderID();
             int latest_id = Integer.parseInt(last_id.split("OR00-")[1])+1;
             return "OR00-"+String.format("%03d",latest_id);
 
