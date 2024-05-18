@@ -1,13 +1,11 @@
 package lk.ijse.gdse66.HelloShoes.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import lk.ijse.gdse66.HelloShoes.service.util.enums.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
 import java.util.Map;
 
 @Data
@@ -17,7 +15,7 @@ public class SaleServiceDTO {
 
     @NotBlank(message = "order no can not be null")
     @Pattern(regexp = "OR00-[0-9]{3}", message = "item code is not valid")
-    private String orderNo;
+    private String orderID;
 
     private Map<String, Integer> inventoryList;
 
@@ -30,8 +28,6 @@ public class SaleServiceDTO {
     @DecimalMin(value = "0.0", inclusive = false, message = "total price must be greater than zero")
     private double totalPrice;
 
-    @JsonFormat(pattern = "yyyyMMdd")
-    private Date purchaseDate;
 
     @NotNull(message = "payment method can not be null")
     private PaymentMethod paymentMethod;

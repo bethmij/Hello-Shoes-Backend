@@ -21,7 +21,7 @@ public class SaleServiceEntity {
 
     @Id
     @Column(name = "order_no")
-    private String orderNo;
+    private String orderID;
 
     @OneToMany(mappedBy = "saleService")
     private Set<SaleInventory> saleInventories = new HashSet<>();
