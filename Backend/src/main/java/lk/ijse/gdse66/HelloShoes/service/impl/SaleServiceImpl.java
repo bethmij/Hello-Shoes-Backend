@@ -73,12 +73,12 @@ public class SaleServiceImpl implements SaleService {
 
         SaleServiceEntity saleService = saleServiceRepo.findById(orderNo).get();
 
-        return saleInventoryRepo.findBySaleService_OrderNo(saleService.getOrderNo())
+        return saleInventoryRepo.findBySaleService_OrderID(saleService.getOrderID())
                 .stream().map(saleInventory -> {
 
                     SaleInventoryDTO saleInventoryDTO = transformer.fromSaleInventoryEntity(saleInventory);
                     saleInventoryDTO.setItemCode(saleInventory.getInventory().getItemCode());
-                    saleInventoryDTO.setOrderID(saleInventory.getSaleService().getOrderNo());
+                    saleInventoryDTO.setOrderID(saleInventory.getSaleService().getOrderID());
                     saleInventoryDTO.setSize(saleInventory.getInventory().getSize());
                     saleInventoryDTO.setUnitPrice(saleInventory.getInventory().getSaleUnitPrice());
                     saleInventoryDTO.setItemDesc(saleInventory.getInventory().getItemDesc());
@@ -89,7 +89,7 @@ public class SaleServiceImpl implements SaleService {
     @Override
     public SaleServiceDTO saveSaleService(SaleServiceDTO saleServiceDTO) {
 
-        saleServiceDTO.setOrderNo(generateID.generateSaleCode());
+        saleServiceDTO.setOrderID(generateID.generateSaleCode());
 
         Customers customers = customerRepo.findByCustomerName(saleServiceDTO.getCustomerName());
         Employee employee = employeeRepo.findByEmployeeName(saleServiceDTO.getCashier());
@@ -116,8 +116,8 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public void updateSaleService(SaleServiceDTO saleServiceDTO) {
-        if (!saleServiceRepo.existsById(saleServiceDTO.getOrderNo())) {
-            throw new NotFoundException("Order no: " + saleServiceDTO.getOrderNo() + " does not exist");
+        if (!saleServiceRepo.existsById(saleServiceDTO.getOrderID())) {
+            throw new NotFoundException("Order no: " + saleServiceDTO.getOrderID() + " does not exist");
         }
 
         Customers customers = customerRepo.findByCustomerName(saleServiceDTO.getCustomerName());
