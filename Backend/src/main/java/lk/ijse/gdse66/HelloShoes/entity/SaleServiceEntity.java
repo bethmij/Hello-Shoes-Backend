@@ -3,16 +3,15 @@ package lk.ijse.gdse66.HelloShoes.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lk.ijse.gdse66.HelloShoes.service.util.enums.PaymentMethod;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -23,10 +22,10 @@ public class SaleServiceEntity {
     @Column(name = "order_no")
     private String orderID;
 
-    @OneToMany(mappedBy = "saleService")
+    @OneToMany(mappedBy = "saleService", cascade = CascadeType.ALL)
     private Set<SaleInventory> saleInventories = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_name", referencedColumnName = "customer_name", nullable = false)
     private Customers customers;
 
@@ -55,7 +54,7 @@ public class SaleServiceEntity {
     @Column(name = "added_points")
     private double addedPoints;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cashier", referencedColumnName = "employee_name", nullable = false)
     private Employee employee;
 
