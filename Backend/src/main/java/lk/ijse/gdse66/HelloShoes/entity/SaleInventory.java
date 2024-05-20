@@ -1,13 +1,15 @@
 package lk.ijse.gdse66.HelloShoes.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.sql.Date;
 
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -22,11 +24,16 @@ public class SaleInventory {
 
     private double prize;
 
-    @ManyToOne
+    @CreationTimestamp
+    @Column ( columnDefinition = "DATE", nullable = false)
+    @JsonFormat(pattern = "yyyyMMdd")
+    private Date purchase_data;
+
+    @ManyToOne()
     @JoinColumn(name = "order_no")
     SaleServiceEntity saleService;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "item_code")
     Inventory inventory;
 }

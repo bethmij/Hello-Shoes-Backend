@@ -16,4 +16,6 @@ public interface InventoryService {
     void deleteInventory(String id);
 
     List<String> getAllItemCodes();
+
+    String getItemCode();
 }

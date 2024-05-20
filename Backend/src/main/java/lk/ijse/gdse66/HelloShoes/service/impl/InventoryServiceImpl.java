@@ -52,9 +52,9 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public InventoryDTO saveInventory(InventoryDTO inventoryDTO) {
 
-        if(inventoryRepo.existsBySuppliers_SupplierCode(inventoryDTO.getSupplierCode())){
-            throw new NotFoundException("Supplier Code: " + inventoryDTO.getSupplierCode() + " exist");
-        }
+//        if(inventoryRepo.existsBySuppliers_SupplierCode(inventoryDTO.getSupplierCode())){
+//            throw new NotFoundException("Supplier Code: " + inventoryDTO.getSupplierCode() + " exist");
+//        }
 
         inventoryDTO.setItemCode(generateID.generateItemCode());
 
@@ -91,6 +91,11 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public List<String> getAllItemCodes() {
         return inventoryRepo.findAllIds();
+    }
+
+    @Override
+    public String getItemCode() {
+        return generateID.generateItemCode();
     }
 
 //    @Override
