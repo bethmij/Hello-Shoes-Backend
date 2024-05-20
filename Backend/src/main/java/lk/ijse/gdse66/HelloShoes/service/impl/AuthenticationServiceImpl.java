@@ -10,7 +10,6 @@ import lk.ijse.gdse66.HelloShoes.repository.EmployeeRepo;
 import lk.ijse.gdse66.HelloShoes.repository.UserRepo;
 import lk.ijse.gdse66.HelloShoes.service.AuthenticationService;
 import lk.ijse.gdse66.HelloShoes.service.JwtService;
-import lk.ijse.gdse66.HelloShoes.service.exception.NotFoundException;
 import lk.ijse.gdse66.HelloShoes.service.util.Transformer;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -51,9 +50,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public JwtAuthResponse signUp(SignUpRequest signUpRequest) {
 
-        if (!employeeRepo.existsByEmail(signUpRequest.getEmail())) {
-            throw new NotFoundException("User email: " + signUpRequest.getEmail() + " does not exist");
-        }
+//        if (!employeeRepo.existsByEmail(signUpRequest.getEmail())) {
+//            throw new NotFoundException("User email: " + signUpRequest.getEmail() + " does not exist");
+//        }
 
         Employee employee = employeeRepo.findByEmail(signUpRequest.getEmail());
 
