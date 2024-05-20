@@ -18,6 +18,8 @@ public class InventoryDTO {
     private String itemDesc;
     private String itemPicture;
 
+    private int itemQty;
+
     @NotBlank(message = "category can not be null")
     private String category;
 

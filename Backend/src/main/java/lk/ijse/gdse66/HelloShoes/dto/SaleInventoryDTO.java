@@ -17,9 +17,9 @@ public class SaleInventoryDTO {
 
     private int size;
 
-    private int qty;
+    private int itemQuantity;
 
-    private double unitPrice;
+    private double saleUnitPrice;
 
     private String itemDesc;
 

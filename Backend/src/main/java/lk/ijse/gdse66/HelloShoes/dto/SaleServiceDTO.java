@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
 import java.util.Map;
 
 @Data
@@ -18,6 +19,8 @@ public class SaleServiceDTO {
     private String orderID;
 
     private Map<String, Integer> inventoryList;
+
+    private String customerCode;
 
     @NotBlank(message = "customer name can not be null")
     @Pattern(regexp = "[A-Za-z ]+", message = "name is not valid")
@@ -33,6 +36,9 @@ public class SaleServiceDTO {
     private PaymentMethod paymentMethod;
     private double addedPoints;
 
+    private Date purchaseDate;
+
+    private String employeeCode;
     @NotBlank(message = "cashier can not be null")
     private String cashier;
 
