@@ -35,18 +35,23 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public List<InventoryDTO> getAllInventory() {
         return inventoryRepo.findAll().stream()
+                .filter(inventory -> !inventory.getItemCode().equals("I00-002") && !inventory.getItemCode().equals("I00-003"))
                 .map(inventory -> transformer.fromInventoryEntity(inventory))
                 .toList();
     }
 
     @Override
     public InventoryDTO getInventoryDetails(String code) {
-        if(!inventoryRepo.existsById(code)){
+        if ("I00-002".equals(code) || "I00-003".equals(code)) {
             throw new NotFoundException("Item Code: " + code + " does not exist");
         }
 
-        return transformer.fromInventoryEntity(inventoryRepo.findById(code).get());
+        if (!inventoryRepo.existsById(code)) {
+            throw new NotFoundException("Item Code: " + code + " does not exist");
+        }
 
+        return transformer.fromInventoryEntity(inventoryRepo.findById(code).orElseThrow(() ->
+                new NotFoundException("Item Code: " + code + " does not exist")));
     }
 
     @Override
@@ -90,7 +95,9 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public List<String> getAllItemCodes() {
-        return inventoryRepo.findAllIds();
+        return inventoryRepo.findAllIds().stream()
+                .filter(code -> !code.equals("I00-002") && !code.equals("I00-003"))
+                .toList();
     }
 
     @Override
