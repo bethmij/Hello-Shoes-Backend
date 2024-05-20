@@ -6,7 +6,9 @@ import lk.ijse.gdse66.HelloShoes.dto.SaleServiceDTO;
 import lk.ijse.gdse66.HelloShoes.entity.*;
 import lk.ijse.gdse66.HelloShoes.repository.*;
 import lk.ijse.gdse66.HelloShoes.service.SaleService;
+//import lk.ijse.gdse66.HelloShoes.service.exception.InsufficientInventoryException;
 import lk.ijse.gdse66.HelloShoes.service.exception.NotFoundException;
+import lk.ijse.gdse66.HelloShoes.service.exception.ServiceException;
 import lk.ijse.gdse66.HelloShoes.service.util.GenerateID;
 import lk.ijse.gdse66.HelloShoes.service.util.Transformer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,12 +125,21 @@ public class SaleServiceImpl implements SaleService {
 
         for (Map.Entry<String, Integer> entry : saleServiceDTO.getInventoryList().entrySet()) {
             Inventory inventory = inventoryRepo.findById(entry.getKey()).get();
+            System.out.println(inventory);
             SaleInventory saleInventory = new SaleInventory();
             saleInventory.setSaleService(saleService);
             saleInventory.setInventory(inventory);
             saleInventory.setQty(entry.getValue());
             saleInventory.setPrize(entry.getValue() * inventory.getSaleUnitPrice());
             saleInventoryRepo.save(saleInventory);
+
+            int updatedQty = inventory.getItemQty() - entry.getValue();
+            if (updatedQty < 0) {
+//                throw new InsufficientInventoryException("Insufficient inventory for item: " + inventory.getItemCode());
+                throw new ServiceException("Insufficient inventory for item: " + inventory.getItemCode());
+            }
+            inventory.setItemQty(updatedQty);
+            inventoryRepo.save(inventory);
         }
 //
 //        LocalDate today = LocalDate.now();
@@ -250,9 +261,12 @@ public class SaleServiceImpl implements SaleService {
             adminPanel.setTotalProfit(adminPanel.getTotalProfit() + saleServiceDTO.getTotalPrice());
         }
 
+
+
         adminPanelRepo.save(adminPanel);
 
         return transformer.fromSaleServiceEntity(saleService);
+//        return saleServiceDTO;
 
     }
 
