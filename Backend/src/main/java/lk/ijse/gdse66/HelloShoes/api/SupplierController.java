@@ -28,6 +28,11 @@ public class SupplierController {
         return supplierService.getSupplierDetails(id);
     }
 
+    @GetMapping(path = "/nextID")
+    public String getSupplierCode(){
+        return supplierService.getSupplierCode();
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public SuppliersDTO saveSupplier( @Valid @RequestBody SuppliersDTO suppliersDTO){

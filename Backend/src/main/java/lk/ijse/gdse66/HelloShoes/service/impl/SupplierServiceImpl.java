@@ -70,6 +70,12 @@ public class SupplierServiceImpl implements SupplierService {
 
     }
 
+    @Override
+    public String getSupplierCode() {
+        return generateID.generateSupplerCode();
+
+    }
+
 //    @Override
 //    public List<String> GetSupplierCode() {
 //        return null;

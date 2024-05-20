@@ -7,6 +7,7 @@ public interface SaleServiceRepo extends JpaRepository<SaleServiceEntity,String>
 
     SaleServiceEntity findFirstByOrderByOrderIDDesc();
 
+
 //    boolean existsBySuppliers_SupplierCode(String code);
 
 }

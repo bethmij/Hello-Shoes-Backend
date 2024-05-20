@@ -15,5 +15,7 @@ public interface SupplierService {
 
     void deleteSupplier(String id);
 
+    String getSupplierCode();
+
 //    List<String> GetSupplierCode();
 }
