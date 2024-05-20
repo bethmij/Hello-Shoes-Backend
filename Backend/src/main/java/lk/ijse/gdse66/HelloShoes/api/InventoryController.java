@@ -33,6 +33,11 @@ public class InventoryController {
         return inventoryService.getInventoryDetails(id);
     }
 
+    @GetMapping(path = "/nextID")
+    public String getItemCode(){
+        return inventoryService.getItemCode();
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public InventoryDTO saveInventory( @Valid @RequestBody InventoryDTO inventoryDTO){
