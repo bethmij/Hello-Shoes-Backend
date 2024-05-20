@@ -5,13 +5,12 @@ import jakarta.persistence.*;
 import lk.ijse.gdse66.HelloShoes.service.util.enums.Gender;
 import lk.ijse.gdse66.HelloShoes.service.util.enums.Role;
 import lk.ijse.gdse66.HelloShoes.service.util.enums.Status;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Date;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

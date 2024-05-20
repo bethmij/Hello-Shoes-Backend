@@ -2,14 +2,13 @@ package lk.ijse.gdse66.HelloShoes.entity;
 
 import jakarta.persistence.*;
 import lk.ijse.gdse66.HelloShoes.service.util.enums.Category;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
