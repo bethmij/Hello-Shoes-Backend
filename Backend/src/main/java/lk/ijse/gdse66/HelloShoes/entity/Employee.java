@@ -66,11 +66,11 @@ public class Employee {
     @Column(name = "postal_code", nullable = false)
     private String addressLine05;
 
-    @Column(name = "contact_no", length = 15, nullable = false)
-    private String contactNo;
+    @Column(name = "contact_no", length = 10, nullable = false)
+    private int contactNo;
 
     @Column(name = "emergency_contact", length = 10, nullable = false)
-    private String emergencyContact;
+    private int emergencyContact;
 
     @Column(nullable = false, unique = true)
     private String email;
