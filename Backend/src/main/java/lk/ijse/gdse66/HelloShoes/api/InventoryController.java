@@ -38,6 +38,11 @@ public class InventoryController {
         return inventoryService.getItemCode();
     }
 
+    @GetMapping(path = "/lowStock")
+    public List<InventoryDTO> getLowStock(){
+        return inventoryService.getLowStockItem();
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public InventoryDTO saveInventory( @Valid @RequestBody InventoryDTO inventoryDTO){

@@ -15,4 +15,9 @@ public interface InventoryRepo extends JpaRepository<Inventory,String> {
     @Query("SELECT i.itemCode FROM Inventory i ORDER BY i.itemCode")
     List<String> findAllIds();
 
+    @Query("SELECT i FROM Inventory i WHERE i.status = 'LOW'")
+    List<Inventory> findLowStock();
+
+
+
 }

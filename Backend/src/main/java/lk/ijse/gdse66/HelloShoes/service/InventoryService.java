@@ -18,4 +18,8 @@ public interface InventoryService {
     List<String> getAllItemCodes();
 
     String getItemCode();
+
+    List<InventoryDTO> getLowStockItem();
+
+    void setItemStatus();
 }

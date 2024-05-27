@@ -9,6 +9,7 @@ import lk.ijse.gdse66.HelloShoes.service.InventoryService;
 import lk.ijse.gdse66.HelloShoes.service.exception.NotFoundException;
 import lk.ijse.gdse66.HelloShoes.service.util.GenerateID;
 import lk.ijse.gdse66.HelloShoes.service.util.Transformer;
+import lk.ijse.gdse66.HelloShoes.service.util.enums.ItemStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,7 +77,7 @@ public class InventoryServiceImpl implements InventoryService {
         Inventory inventory = transformer.toInventoryEntity(inventoryDTO);
         inventory.setSuppliers(suppliers);
         inventory.setSupplierName(suppliers.getSupplierName());
-
+        setItemStatus();
         return transformer.fromInventoryEntity(
                 inventoryRepo.save(inventory));
 
@@ -94,7 +95,7 @@ public class InventoryServiceImpl implements InventoryService {
         Inventory inventory = transformer.toInventoryEntity(inventoryDTO);
         inventory.setSuppliers(suppliers);
         inventory.setSupplierName(suppliers.getSupplierName());
-
+        setItemStatus();
         inventoryRepo.save(inventory);
     }
 
@@ -117,6 +118,31 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public String getItemCode() {
         return generateID.generateItemCode();
+    }
+
+    @Override
+    public List<InventoryDTO> getLowStockItem() {
+        return inventoryRepo.findLowStock().stream()
+                .map(item -> transformer.fromInventoryEntity(item))
+                .toList();
+    }
+
+    @Override
+    public void setItemStatus() {
+        List<Inventory> inventories = inventoryRepo.findAll().stream()
+                .map(inventory -> {
+                            if (inventory.getItemQty() == 0) {
+                                inventory.setStatus(ItemStatus.NOT_AVAILABLE);
+                            } else if (inventory.getItemQty() <= 10) {
+                                inventory.setStatus(ItemStatus.LOW);
+                            } else {
+                                inventory.setStatus(ItemStatus.AVAILABLE);
+                            }
+                            inventoryRepo.save(inventory);
+
+                            return inventory;
+                        }
+                ).toList();
     }
 
 //    @Override
