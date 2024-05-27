@@ -33,6 +33,7 @@ public class JwtServiceImpl implements JwtService {
         Date currentDate = new Date();
 //        Date expiredDate = new Date(currentDate.getTime() + 1000 * 600);
         Date expiredDate = new Date(currentDate.getTime() + 1000 * 600000);
+//        Date expiredDate = new Date(currentDate.getTime() + 1000 * 6);
         String accessToken = Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername()) // set the "subject" (sub) claim of the JWT
