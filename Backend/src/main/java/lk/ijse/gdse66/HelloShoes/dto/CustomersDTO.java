@@ -29,7 +29,7 @@ public class CustomersDTO {
     @JsonFormat(pattern = "yyyyMMdd")
     private Date loyaltyJoinedDate;
     private Level level;
-    private int totalPoints;
+//    private int totalPoints;
 
     @JsonFormat(pattern = "yyyyMMdd")
     private Date dob;
@@ -45,9 +45,8 @@ public class CustomersDTO {
     private String addressLine05;
 
     @NotBlank(message = "contact no can not be null")
-    @Pattern(regexp = "\\d{10}", message = "Contact  must be exactly 10 digits")
-    private int contactNo;
-
+    @Pattern(regexp = "\\d{10}", message = "Contact must be exactly 10 digits")
+    private String contactNo;
 
     private String email;
 

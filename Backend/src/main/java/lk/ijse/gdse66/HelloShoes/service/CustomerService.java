@@ -20,4 +20,6 @@ public interface CustomerService {
     String getNameByID(String id);
 
     String getCustomerCode();
+
+    void setLevel();
 }

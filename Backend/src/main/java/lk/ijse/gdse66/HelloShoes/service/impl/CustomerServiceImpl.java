@@ -1,11 +1,13 @@
 package lk.ijse.gdse66.HelloShoes.service.impl;
 
 import lk.ijse.gdse66.HelloShoes.dto.CustomersDTO;
+import lk.ijse.gdse66.HelloShoes.entity.Customers;
 import lk.ijse.gdse66.HelloShoes.repository.CustomerRepo;
 import lk.ijse.gdse66.HelloShoes.service.CustomerService;
 import lk.ijse.gdse66.HelloShoes.service.exception.NotFoundException;
 import lk.ijse.gdse66.HelloShoes.service.util.GenerateID;
 import lk.ijse.gdse66.HelloShoes.service.util.Transformer;
+import lk.ijse.gdse66.HelloShoes.service.util.enums.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomersDTO getCustomersDetails(String code) {
-        if(!customerRepo.existsById(code)){
+        if (!customerRepo.existsById(code)) {
             throw new NotFoundException("Customer Code: " + code + " does not exist");
         }
 
@@ -46,7 +48,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomersDTO saveCustomers(CustomersDTO customersDTO) {
         customersDTO.setCustomerCode(generateID.generateCustomerCode());
-
+        setLevel();
+        customersDTO.setLevel(Level.NEW);
         return transformer.fromCustomerEntity(
                 customerRepo.save(
                         transformer.toCustomerEntity(customersDTO)));
@@ -54,16 +57,16 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void updateCustomers(CustomersDTO customersDTO) {
-        if(!customerRepo.existsById(customersDTO.getCustomerCode())){
+        if (!customerRepo.existsById(customersDTO.getCustomerCode())) {
             throw new NotFoundException("Customer Code: " + customersDTO.getCustomerCode() + " does not exist");
         }
-
+        setLevel();
         customerRepo.save(transformer.toCustomerEntity(customersDTO));
     }
 
     @Override
     public void deleteCustomers(String id) {
-        if(!customerRepo.existsById(id)){
+        if (!customerRepo.existsById(id)) {
             throw new NotFoundException("Customer Code: " + id + " does not exist");
         }
         customerRepo.deleteById(id);
@@ -83,6 +86,28 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public String getCustomerCode() {
         return generateID.generateCustomerCode();
+    }
+
+    @Override
+    public void setLevel() {
+        List<Customers> customers = customerRepo.findAll().stream()
+                .map(customer -> {
+                            if (customer.getTotalPoints() > 200) {
+                                customer.setLevel(Level.GOLD);
+
+                            } else if ((customer.getTotalPoints() >= 100) && (customer.getTotalPoints() <= 199)) {
+                                customer.setLevel(Level.SILVER);
+
+                            } else if ((customer.getTotalPoints() >= 55) && (customer.getTotalPoints() <= 99)) {
+                                customer.setLevel(Level.BRONZE);
+                            }else {
+                                customer.setLevel(Level.NEW);
+                            }
+                            customerRepo.save(customer);
+
+                            return customer;
+                        }
+                ).toList();
     }
 
 //    @Override
