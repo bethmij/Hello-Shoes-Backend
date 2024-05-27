@@ -51,6 +51,9 @@ public class SaleServiceImpl implements SaleService {
     @Autowired
     SaleInventoryRepo saleInventoryRepo;
 
+    @Autowired
+    InventoryServiceImpl inventoryService;
+
 
     @Override
     public List<SaleServiceDTO> getAllSaleService() {
@@ -114,6 +117,8 @@ public class SaleServiceImpl implements SaleService {
 
         SaleServiceEntity saleService = saveOrder(saleServiceDTO);
 
+        inventoryService.setItemStatus();
+
         return transformer.fromSaleServiceEntity(saleService);
 
 
@@ -125,6 +130,7 @@ public class SaleServiceImpl implements SaleService {
         if (!saleServiceRepo.existsById(saleServiceDTO.getOrderID())) {
             throw new NotFoundException("Order no: " + saleServiceDTO.getOrderID() + " does not exist");
         }
+        inventoryService.setItemStatus();
         saveOrder(saleServiceDTO);
 
     }
@@ -160,11 +166,13 @@ public class SaleServiceImpl implements SaleService {
         LocalDate purchaseDate = convertToLocalDate(refundDTO.getPurchaseDate());
         SaleInventory saleInventory = saleInventoryRepo.findSalesByOrderAndPurchaseDate(refundDTO.getOrderID(), purchaseDate);
 
+
         if(saleInventory != null) {
             if (saleInventory.getQty() >= refundDTO.getItemQty()) {
                 saleInventory.setQty(saleInventory.getQty() - refundDTO.getItemQty());
                 saleInventory.setPurchase_data(refundDTO.getPurchaseDate());
                 saleInventoryRepo.save(saleInventory);
+                inventoryService.setItemStatus();
             } else {
                 throw new ServiceException("Insufficient item for refund: " + inventory.getItemCode());
             }
@@ -269,6 +277,12 @@ public class SaleServiceImpl implements SaleService {
         }
 
         adminPanelRepo.save(adminPanel);
+
+        if(saleServiceDTO.getTotalPrice() >= 800){
+            customers.setTotalPoints(customers.getTotalPoints()+1);
+        }
+        customerRepo.save(customers);
+
         return saleService;
     }
 

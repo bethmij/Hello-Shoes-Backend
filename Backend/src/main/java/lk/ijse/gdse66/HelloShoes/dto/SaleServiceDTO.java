@@ -1,6 +1,7 @@
 package lk.ijse.gdse66.HelloShoes.dto;
 
 import jakarta.validation.constraints.*;
+import lk.ijse.gdse66.HelloShoes.service.util.enums.Loyalty;
 import lk.ijse.gdse66.HelloShoes.service.util.enums.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,6 +32,7 @@ public class SaleServiceDTO {
     @DecimalMin(value = "0.0", inclusive = false, message = "total price must be greater than zero")
     private double totalPrice;
 
+    private Loyalty customerType;
 
     @NotNull(message = "payment method can not be null")
     private PaymentMethod paymentMethod;

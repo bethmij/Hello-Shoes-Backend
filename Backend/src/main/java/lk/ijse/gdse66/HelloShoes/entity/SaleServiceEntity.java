@@ -2,6 +2,7 @@ package lk.ijse.gdse66.HelloShoes.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import lk.ijse.gdse66.HelloShoes.service.util.enums.Loyalty;
 import lk.ijse.gdse66.HelloShoes.service.util.enums.PaymentMethod;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,8 +27,13 @@ public class SaleServiceEntity {
     private Set<SaleInventory> saleInventories = new HashSet<>();
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "customer_name", referencedColumnName = "customer_name", nullable = false)
+    @JoinColumn(name = "customer_name", referencedColumnName = "customer_name")
     private Customers customers;
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "customer_type")
+    private Loyalty customerType;
 
 //    @Column(name = "item_desc")
 //    private String itemDesc;
