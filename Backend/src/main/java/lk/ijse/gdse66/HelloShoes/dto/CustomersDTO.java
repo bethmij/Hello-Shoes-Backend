@@ -45,9 +45,10 @@ public class CustomersDTO {
     private String addressLine05;
 
     @NotBlank(message = "contact no can not be null")
-    private String contactNo;
+    @Pattern(regexp = "\\d{10}", message = "Contact  must be exactly 10 digits")
+    private int contactNo;
 
-    @NotBlank(message = "email code can not be null")
+
     private String email;
 
 

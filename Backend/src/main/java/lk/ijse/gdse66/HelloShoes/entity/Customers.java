@@ -56,8 +56,8 @@ public class Customers {
     @Column(name = "postal_code", nullable = false)
     private String addressLine05;
 
-    @Column(name = "contact_no", length = 15, nullable = false)
-    private String contactNo;
+    @Column(name = "contact_no", length = 10, nullable = false)
+    private int contactNo;
 
     private String email;
 
