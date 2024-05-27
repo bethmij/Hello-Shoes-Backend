@@ -76,6 +76,11 @@ public class SupplierServiceImpl implements SupplierService {
 
     }
 
+    @Override
+    public List<String> getSupplierCodes() {
+        return supplierRepo.findAllIds();
+    }
+
 //    @Override
 //    public List<String> GetSupplierCode() {
 //        return null;

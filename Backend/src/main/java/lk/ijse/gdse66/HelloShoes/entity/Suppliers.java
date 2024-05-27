@@ -52,6 +52,6 @@ public class Suppliers {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @OneToMany(mappedBy = "suppliers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "suppliers",fetch = FetchType.LAZY)
     private List<Inventory> inventories = new ArrayList<>();
 }

@@ -17,5 +17,7 @@ public interface SupplierService {
 
     String getSupplierCode();
 
+    List<String> getSupplierCodes();
+
 //    List<String> GetSupplierCode();
 }
