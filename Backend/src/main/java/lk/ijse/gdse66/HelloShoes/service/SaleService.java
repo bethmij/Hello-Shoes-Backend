@@ -1,5 +1,6 @@
 package lk.ijse.gdse66.HelloShoes.service;
 
+import lk.ijse.gdse66.HelloShoes.dto.RefundDTO;
 import lk.ijse.gdse66.HelloShoes.dto.SaleInventoryDTO;
 import lk.ijse.gdse66.HelloShoes.dto.SaleServiceDTO;
 
@@ -20,5 +21,7 @@ public interface SaleService {
 
     String getOrderID();
 
-//    List<String> GetSupplierCode();
+    List<String> getAllOrderCodes();
+
+    void refundItems(RefundDTO refundDTO);
 }
