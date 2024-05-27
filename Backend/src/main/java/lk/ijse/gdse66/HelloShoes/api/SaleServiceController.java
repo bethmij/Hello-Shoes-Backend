@@ -1,6 +1,7 @@
 package lk.ijse.gdse66.HelloShoes.api;
 
 import jakarta.validation.Valid;
+import lk.ijse.gdse66.HelloShoes.dto.RefundDTO;
 import lk.ijse.gdse66.HelloShoes.dto.SaleInventoryDTO;
 import lk.ijse.gdse66.HelloShoes.dto.SaleServiceDTO;
 import lk.ijse.gdse66.HelloShoes.service.SaleService;
@@ -39,6 +40,11 @@ public class SaleServiceController {
         return saleService.getSaleInventory(id);
     }
 
+    @GetMapping(value ="/getIDs")
+    public List<String> getAllOrderIDs(){
+        return saleService.getAllOrderCodes();
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public SaleServiceDTO saveSaleService( @Valid @RequestBody SaleServiceDTO saleServiceDTO){
@@ -49,6 +55,12 @@ public class SaleServiceController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateSaleService(@Valid @RequestBody SaleServiceDTO SaleServiceDTO){
         saleService.updateSaleService(SaleServiceDTO);
+    }
+
+    @PatchMapping(path = "/refund",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void refund(@Valid @RequestBody RefundDTO refundDTO){
+        saleService.refundItems(refundDTO);
     }
 
     @DeleteMapping(path = "/{id}")

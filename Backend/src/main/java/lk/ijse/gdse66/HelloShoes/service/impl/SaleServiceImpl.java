@@ -1,12 +1,12 @@
 package lk.ijse.gdse66.HelloShoes.service.impl;
 
 import lk.ijse.gdse66.HelloShoes.dto.AdminPanelDTO;
+import lk.ijse.gdse66.HelloShoes.dto.RefundDTO;
 import lk.ijse.gdse66.HelloShoes.dto.SaleInventoryDTO;
 import lk.ijse.gdse66.HelloShoes.dto.SaleServiceDTO;
 import lk.ijse.gdse66.HelloShoes.entity.*;
 import lk.ijse.gdse66.HelloShoes.repository.*;
 import lk.ijse.gdse66.HelloShoes.service.SaleService;
-//import lk.ijse.gdse66.HelloShoes.service.exception.InsufficientInventoryException;
 import lk.ijse.gdse66.HelloShoes.service.exception.NotFoundException;
 import lk.ijse.gdse66.HelloShoes.service.exception.ServiceException;
 import lk.ijse.gdse66.HelloShoes.service.util.GenerateID;
@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -111,6 +112,73 @@ public class SaleServiceImpl implements SaleService {
 
         saleServiceDTO.setOrderID(generateID.generateSaleCode());
 
+        SaleServiceEntity saleService = saveOrder(saleServiceDTO);
+
+        return transformer.fromSaleServiceEntity(saleService);
+
+
+    }
+
+
+    @Override
+    public void updateSaleService(SaleServiceDTO saleServiceDTO) {
+        if (!saleServiceRepo.existsById(saleServiceDTO.getOrderID())) {
+            throw new NotFoundException("Order no: " + saleServiceDTO.getOrderID() + " does not exist");
+        }
+        saveOrder(saleServiceDTO);
+
+    }
+
+    @Override
+    public void deleteSaleService(String id) {
+        if (!saleServiceRepo.existsById(id)) {
+            throw new NotFoundException("Order no: " + id + " does not exist");
+        }
+        saleServiceRepo.deleteById(id);
+
+    }
+
+    @Override
+    public String getOrderID() {
+        return generateID.generateSaleCode();
+    }
+
+    @Override
+    public List<String> getAllOrderCodes() {
+        return saleServiceRepo.findAllIds();
+    }
+
+    @Override
+    public void refundItems(RefundDTO refundDTO) {
+        Inventory inventory = inventoryRepo.findById(refundDTO.getItemCode()).get();
+        SaleServiceEntity order = saleServiceRepo.findById(refundDTO.getOrderID()).get();
+
+        order.setTotalPrice(order.getTotalPrice() - inventory.getSaleUnitPrice());
+        saleServiceRepo.save(order);
+
+
+        LocalDate purchaseDate = convertToLocalDate(refundDTO.getPurchaseDate());
+        SaleInventory saleInventory = saleInventoryRepo.findSalesByOrderAndPurchaseDate(refundDTO.getOrderID(), purchaseDate);
+
+        if(saleInventory != null) {
+            if (saleInventory.getQty() >= refundDTO.getItemQty()) {
+                saleInventory.setQty(saleInventory.getQty() - refundDTO.getItemQty());
+                saleInventory.setPurchase_data(refundDTO.getPurchaseDate());
+                saleInventoryRepo.save(saleInventory);
+            } else {
+                throw new ServiceException("Insufficient item for refund: " + inventory.getItemCode());
+            }
+        }else {
+            throw new ServiceException("No such order");
+        }
+    }
+
+//    @Override
+//    public List<String> GetSupplierCode() {
+//        return null;
+//    }
+
+    private SaleServiceEntity saveOrder(SaleServiceDTO saleServiceDTO) {
         Customers customers = customerRepo.findByCustomerName(saleServiceDTO.getCustomerName());
         Employee employee = employeeRepo.findByEmployeeName(saleServiceDTO.getCashier());
 
@@ -138,79 +206,18 @@ public class SaleServiceImpl implements SaleService {
 //                throw new InsufficientInventoryException("Insufficient inventory for item: " + inventory.getItemCode());
                 throw new ServiceException("Insufficient inventory for item: " + inventory.getItemCode());
             }
+
             inventory.setItemQty(updatedQty);
             inventoryRepo.save(inventory);
         }
-//
-//        LocalDate today = LocalDate.now();
-//        Date todayAsDate = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
-//        AdminPanel adminPanel = adminPanelRepo.findByDate(todayAsDate);
-//        AdminPanelDTO adminPanelDTO = new AdminPanelDTO();
-//        adminPanelDTO.setTotalProfit(saleServiceDTO.getTotalPrice());
-//        adminPanelDTO.setDate( new java.sql.Date(todayAsDate.getTime()) );
-//
-//        if (adminPanel == null){
-//            adminPanelDTO.setTotalSales(totalSales);
-//            adminPanelDTO.setMostSaleItemQty(mostSaleQty);
-//            adminPanelDTO.setMostSaleItem(mostSaleItem);
-//        }else {
-//            totalSales = 0;
-//            List<SaleInventory> saleInventoryList = saleInventoryRepo.findByPurchase_data(todayAsDate);
-//
-//            Map<String, Integer> itemQuantityMap = new HashMap<>();
-//
-//            for (SaleInventory saleInventory : saleInventoryList) {
-//                String item = saleInventory.getInventory().getItemCode(); // Assuming there's a method to get the item name
-//                int quantity = saleInventory.getQty();
-//                itemQuantityMap.put(item, itemQuantityMap.getOrDefault(item, 0) + quantity);
-//            }
-//
-//            for (Map.Entry<String, Integer> entry : saleServiceDTO.getInventoryList().entrySet()) {
-//                String item = entry.getKey();
-//                int quantity = entry.getValue();
-//                itemQuantityMap.put(item, itemQuantityMap.getOrDefault(item, 0) + quantity);
-//            }
-//            for (Map.Entry<String, Integer> entry : itemQuantityMap.entrySet()) {
-//                String item = entry.getKey();
-//                int quantity = entry.getValue();
-//
-//                // Update totalSales with the total quantity of all items
-//                totalSales += quantity;
-//
-//                // Check if the current item has a higher quantity than the previously found maximum
-//                if (quantity > mostSaleQty) {
-//                    mostSaleQty = quantity;
-//                    mostSaleItem = item;
-//                }
-//            }
-//
-//            adminPanelDTO.setTotalSales(totalSales);
-//            adminPanelDTO.setMostSaleItemQty(mostSaleQty);
-//            adminPanelDTO.setMostSaleItem(mostSaleItem);
-//
-//
-////            System.out.println("Total Sales: " + totalSales);
-////            System.out.println("Most Sale Item: " + mostSaleItem);
-////            System.out.println("Most Sale Item Quantity: " + mostSaleQty);
-//
-//        }
-//
-//        adminPanel = transformer.toAdminPanelEntity(adminPanelDTO); // Assuming transformer.toAdminPanelEntity converts AdminPanelDTO to AdminPanel entity
-//        adminPanelRepo.save(adminPanel);
-//
-//
-////        AdminPanelDTO adminPanelDTO = new AdminPanelDTO();
-////        adminPanelDTO.setTotalSales(totalSales);
-////        adminPanelDTO.setTotalProfit();
 
-//        return transformer.fromSaleServiceEntity(saleService);
         LocalDate today = LocalDate.now();
         Date todayAsDate = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
         AdminPanel adminPanel = adminPanelRepo.findByDate(todayAsDate);
 
         AdminPanelDTO adminPanelDTO = new AdminPanelDTO();
 
-        adminPanelDTO.setDate(new java.sql.Date(todayAsDate.getTime()) );
+        adminPanelDTO.setDate(new java.sql.Date(todayAsDate.getTime()));
 
 
         Map<String, Integer> itemQuantityMap = new HashMap<>();
@@ -261,61 +268,14 @@ public class SaleServiceImpl implements SaleService {
             adminPanel.setTotalProfit(adminPanel.getTotalProfit() + saleServiceDTO.getTotalPrice());
         }
 
-
-
         adminPanelRepo.save(adminPanel);
-
-        return transformer.fromSaleServiceEntity(saleService);
-//        return saleServiceDTO;
-
+        return saleService;
     }
 
-    @Override
-    public void updateSaleService(SaleServiceDTO saleServiceDTO) {
-        if (!saleServiceRepo.existsById(saleServiceDTO.getOrderID())) {
-            throw new NotFoundException("Order no: " + saleServiceDTO.getOrderID() + " does not exist");
-        }
-
-        Customers customers = customerRepo.findByCustomerName(saleServiceDTO.getCustomerName());
-        Employee employee = employeeRepo.findByEmployeeName(saleServiceDTO.getCashier());
-        SaleServiceEntity saleServiceEntity = saleServiceRepo.findById(saleServiceDTO.getOrderID()).get();
-
-        SaleServiceEntity saleService = transformer.toSaleServiceEntity(saleServiceDTO);
-        saleService.setEmployee(employee);
-        saleService.setCustomers(customers);
-        saleService.setPurchaseDate(saleServiceEntity.getPurchaseDate());
-        saleServiceRepo.save(saleService);
-
-
-        for (Map.Entry<String, Integer> entry : saleServiceDTO.getInventoryList().entrySet()) {
-            Inventory inventory = inventoryRepo.findById(entry.getKey()).get();
-            SaleInventory saleInventory = new SaleInventory();
-            saleInventory.setSaleService(saleService);
-            saleInventory.setInventory(inventory);
-            saleInventory.setQty(entry.getValue());
-            saleInventory.setPrize(entry.getValue() * inventory.getSaleUnitPrice());
-            saleInventoryRepo.save(saleInventory);
-        }
-
-        saleServiceRepo.save(saleService);
+    private LocalDate convertToLocalDate(Date date) {
+        return Instant.ofEpochMilli(date.getTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
     }
 
-    @Override
-    public void deleteSaleService(String id) {
-        if (!saleServiceRepo.existsById(id)) {
-            throw new NotFoundException("Order no: " + id + " does not exist");
-        }
-        saleServiceRepo.deleteById(id);
-
-    }
-
-    @Override
-    public String getOrderID() {
-        return generateID.generateSaleCode();
-    }
-
-//    @Override
-//    public List<String> GetSupplierCode() {
-//        return null;
-//    }
 }
