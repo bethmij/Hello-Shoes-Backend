@@ -56,10 +56,10 @@ public class Inventory {
     @Enumerated(EnumType.STRING)
     private ItemStatus status;
 
-    @OneToMany(mappedBy = "inventory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "inventory", fetch = FetchType.LAZY)
     private List<AdminPanel> adminPanels = new ArrayList<>();
 
-    @OneToMany(mappedBy = "inventory",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "inventory")
     private Set<SaleInventory> saleInventories = new HashSet<>();
 
     public Inventory(String itemCode) {

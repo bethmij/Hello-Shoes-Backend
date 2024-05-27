@@ -35,14 +35,19 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public List<InventoryDTO> getAllInventory() {
         return inventoryRepo.findAll().stream()
-                .filter(inventory -> !inventory.getItemCode().equals("I00-002") && !inventory.getItemCode().equals("I00-003"))
-                .map(inventory -> transformer.fromInventoryEntity(inventory))
-                .toList();
+                .filter(inventory -> !inventory.getItemCode().equals("I00-005"))
+                .map(inventory -> {
+                            InventoryDTO inventoryDTO = transformer.fromInventoryEntity(inventory);
+                            Suppliers supplier = supplierRepo.findBySupplierName(inventoryDTO.getSupplierName());
+                            inventoryDTO.setSupplierCode(supplier.getSupplierCode());
+                            return inventoryDTO;
+                        }
+                ).toList();
     }
 
     @Override
     public InventoryDTO getInventoryDetails(String code) {
-        if ("I00-002".equals(code) || "I00-003".equals(code)) {
+        if ("I00-005".equals(code)) {
             throw new NotFoundException("Item Code: " + code + " does not exist");
         }
 
@@ -50,8 +55,11 @@ public class InventoryServiceImpl implements InventoryService {
             throw new NotFoundException("Item Code: " + code + " does not exist");
         }
 
-        return transformer.fromInventoryEntity(inventoryRepo.findById(code).orElseThrow(() ->
-                new NotFoundException("Item Code: " + code + " does not exist")));
+        InventoryDTO inventoryDTO = transformer.fromInventoryEntity(inventoryRepo.findById(code).get());
+        Suppliers supplier = supplierRepo.findBySupplierName(inventoryDTO.getSupplierName());
+        inventoryDTO.setSupplierCode(supplier.getSupplierCode());
+        return inventoryDTO;
+
     }
 
     @Override
@@ -77,16 +85,22 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public void updateInventory(InventoryDTO inventoryDTO) {
-        if(!inventoryRepo.existsById(inventoryDTO.getItemCode())){
+        if (!inventoryRepo.existsById(inventoryDTO.getItemCode())) {
             throw new NotFoundException("Item Code: " + inventoryDTO.getItemCode() + " does not exist");
         }
 
-        inventoryRepo.save(transformer.toInventoryEntity(inventoryDTO));
+        Suppliers suppliers = supplierRepo.findBySupplierCode(inventoryDTO.getSupplierCode());
+
+        Inventory inventory = transformer.toInventoryEntity(inventoryDTO);
+        inventory.setSuppliers(suppliers);
+        inventory.setSupplierName(suppliers.getSupplierName());
+
+        inventoryRepo.save(inventory);
     }
 
     @Override
     public void deleteInventory(String id) {
-        if(!inventoryRepo.existsById(id)){
+        if (!inventoryRepo.existsById(id)) {
             throw new NotFoundException("Item Code: " + id + " does not exist");
         }
         inventoryRepo.deleteById(id);
@@ -96,7 +110,7 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public List<String> getAllItemCodes() {
         return inventoryRepo.findAllIds().stream()
-                .filter(code -> !code.equals("I00-002") && !code.equals("I00-003"))
+                .filter(code -> !code.equals("I00-005"))
                 .toList();
     }
 
