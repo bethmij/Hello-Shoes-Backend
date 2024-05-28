@@ -23,8 +23,8 @@ public class SaleServiceDTO {
 
     private String customerCode;
 
-    @NotBlank(message = "customer name can not be null")
-    @Pattern(regexp = "[A-Za-z ]+", message = "name is not valid")
+//    @NotBlank(message = "customer name can not be null")
+//    @Pattern(regexp = "[A-Za-z ]+", message = "name is not valid")
     private String customerName;
 
     @NotNull(message = "total price can not be null")

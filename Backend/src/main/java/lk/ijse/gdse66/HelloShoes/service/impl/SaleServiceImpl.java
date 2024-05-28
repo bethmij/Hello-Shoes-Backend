@@ -1,9 +1,6 @@
 package lk.ijse.gdse66.HelloShoes.service.impl;
 
-import lk.ijse.gdse66.HelloShoes.dto.AdminPanelDTO;
-import lk.ijse.gdse66.HelloShoes.dto.RefundDTO;
-import lk.ijse.gdse66.HelloShoes.dto.SaleInventoryDTO;
-import lk.ijse.gdse66.HelloShoes.dto.SaleServiceDTO;
+import lk.ijse.gdse66.HelloShoes.dto.*;
 import lk.ijse.gdse66.HelloShoes.entity.*;
 import lk.ijse.gdse66.HelloShoes.repository.*;
 import lk.ijse.gdse66.HelloShoes.service.SaleService;
@@ -53,6 +50,9 @@ public class SaleServiceImpl implements SaleService {
 
     @Autowired
     InventoryServiceImpl inventoryService;
+
+    @Autowired
+    SupplierRepo supplierRepo;
 
 
     @Override
@@ -111,6 +111,7 @@ public class SaleServiceImpl implements SaleService {
     }
 
     @Override
+    @Transactional
     public SaleServiceDTO saveSaleService(SaleServiceDTO saleServiceDTO) {
 
         saleServiceDTO.setOrderID(generateID.generateSaleCode());
@@ -131,6 +132,9 @@ public class SaleServiceImpl implements SaleService {
             throw new NotFoundException("Order no: " + saleServiceDTO.getOrderID() + " does not exist");
         }
         inventoryService.setItemStatus();
+
+        SaleServiceEntity saleService = saleServiceRepo.findById(saleServiceDTO.getOrderID()).get();
+        saleServiceDTO.setPurchaseDate(saleService.getPurchaseDate());
         saveOrder(saleServiceDTO);
 
     }
@@ -186,13 +190,32 @@ public class SaleServiceImpl implements SaleService {
 //        return null;
 //    }
 
+
     private SaleServiceEntity saveOrder(SaleServiceDTO saleServiceDTO) {
-        Customers customers = customerRepo.findByCustomerName(saleServiceDTO.getCustomerName());
-        Employee employee = employeeRepo.findByEmployeeName(saleServiceDTO.getCashier());
 
         SaleServiceEntity saleService = transformer.toSaleServiceEntity(saleServiceDTO);
+
+        if(!saleServiceDTO.getCustomerName().isEmpty()) {
+            Customers customers = customerRepo.findByCustomerName(saleServiceDTO.getCustomerName());
+            if (customers == null) {
+                throw new ServiceException("Customer not found: " + saleServiceDTO.getCustomerName());
+            }
+            saleService.setCustomers(customers);
+
+            if(saleServiceDTO.getTotalPrice() >= 800){
+                customers.setTotalPoints(customers.getTotalPoints()+1);
+                saleService.setAddedPoints(1);
+            }
+            customerRepo.save(customers);
+        }
+
+
+        Employee employee = employeeRepo.findByEmployeeName(saleServiceDTO.getCashier());
+        if (employee == null) {
+            throw new ServiceException("Employee not found: " + saleServiceDTO.getCashier());
+        }
+
         saleService.setEmployee(employee);
-        saleService.setCustomers(customers);
         saleServiceRepo.save(saleService);
 
         int totalSales = 0;
@@ -200,8 +223,11 @@ public class SaleServiceImpl implements SaleService {
         int mostSaleQty = 0;
 
         for (Map.Entry<String, Integer> entry : saleServiceDTO.getInventoryList().entrySet()) {
-            Inventory inventory = inventoryRepo.findById(entry.getKey()).get();
-            System.out.println(inventory);
+            Inventory inventory = inventoryRepo.findById(entry.getKey()).orElse(null);
+            if (inventory == null) {
+                throw new ServiceException("Inventory not found: " + entry.getKey());
+            }
+
             SaleInventory saleInventory = new SaleInventory();
             saleInventory.setSaleService(saleService);
             saleInventory.setInventory(inventory);
@@ -211,12 +237,18 @@ public class SaleServiceImpl implements SaleService {
 
             int updatedQty = inventory.getItemQty() - entry.getValue();
             if (updatedQty < 0) {
-//                throw new InsufficientInventoryException("Insufficient inventory for item: " + inventory.getItemCode());
                 throw new ServiceException("Insufficient inventory for item: " + inventory.getItemCode());
             }
 
-            inventory.setItemQty(updatedQty);
-            inventoryRepo.save(inventory);
+            InventoryDTO inventoryDTO = transformer.fromInventoryEntity(inventory);
+            inventoryDTO.setItemQty(updatedQty);
+
+            Suppliers suppliers = supplierRepo.findBySupplierName(inventoryDTO.getSupplierName());
+            if (suppliers == null) {
+                throw new ServiceException("Supplier not found: " + inventoryDTO.getSupplierName());
+            }
+            inventoryDTO.setSupplierCode(suppliers.getSupplierCode());
+            inventoryService.updateInventory(inventoryDTO);
         }
 
         LocalDate today = LocalDate.now();
@@ -278,10 +310,7 @@ public class SaleServiceImpl implements SaleService {
 
         adminPanelRepo.save(adminPanel);
 
-        if(saleServiceDTO.getTotalPrice() >= 800){
-            customers.setTotalPoints(customers.getTotalPoints()+1);
-        }
-        customerRepo.save(customers);
+
 
         return saleService;
     }
