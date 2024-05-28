@@ -12,7 +12,7 @@ public interface InventoryRepo extends JpaRepository<Inventory,String> {
 
     boolean existsBySuppliers_SupplierCode(String code);
 
-    @Query("SELECT i.itemCode FROM Inventory i ORDER BY i.itemCode")
+    @Query("SELECT i.itemCode FROM Inventory i WHERE i.status != 'NOT_AVAILABLE' ORDER BY i.itemCode")
     List<String> findAllIds();
 
     @Query("SELECT i FROM Inventory i WHERE i.status = 'LOW'")
