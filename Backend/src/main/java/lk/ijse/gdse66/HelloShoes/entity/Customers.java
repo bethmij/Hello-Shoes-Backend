@@ -65,6 +65,12 @@ public class Customers {
     @CreationTimestamp
     private Timestamp recentPurchaseDate;
 
+
+    @CreationTimestamp
+    @Column (name = "birthday_wish", columnDefinition = "DATE")
+    @JsonFormat(pattern = "yyyyMMdd")
+    private Date birthdayWish;
+
 //    @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    private List<SaleServiceEntity> saleServiceEntities = new ArrayList<>();
 

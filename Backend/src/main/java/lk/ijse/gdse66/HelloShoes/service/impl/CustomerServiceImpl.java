@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -108,6 +110,25 @@ public class CustomerServiceImpl implements CustomerService {
                             return customer;
                         }
                 ).toList();
+    }
+
+    @Override
+    public List<CustomersDTO> getCustomersWithBirthdaysToday() {
+        return customerRepo.findCustomersWithBirthdaysToday().stream()
+                .map(customers -> transformer.fromCustomerEntity(customers))
+                .toList();
+    }
+
+    @Override
+    public void saveBirthdayWishDate(CustomersDTO customersDTO) {
+        if (!customerRepo.existsById(customersDTO.getCustomerCode())) {
+            throw new NotFoundException("Customer Code: " + customersDTO.getCustomerCode() + " does not exist");
+        }
+
+        Customers customer = customerRepo.findById(customersDTO.getCustomerCode()).get();
+        Date today = Date.valueOf(LocalDate.now());
+        customer.setBirthdayWish(today);
+        customerRepo.save(customer);
     }
 
 //    @Override

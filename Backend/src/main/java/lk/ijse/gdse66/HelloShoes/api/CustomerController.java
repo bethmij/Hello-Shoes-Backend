@@ -43,6 +43,18 @@ public class CustomerController {
         return customerService.getCustomersDetails(code);
     }
 
+    @GetMapping(value ="/birthday",produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<CustomersDTO> getBirthdayCustomers(){
+        return customerService.getCustomersWithBirthdaysToday();
+    }
+
+    @PatchMapping(value ="/birthday",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void saveBirthdayCustomers( @Valid @RequestBody CustomersDTO customerDTO){
+         customerService.saveBirthdayWishDate(customerDTO);
+    }
+
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public CustomersDTO saveCustomer( @Valid @RequestBody CustomersDTO customerDTO){

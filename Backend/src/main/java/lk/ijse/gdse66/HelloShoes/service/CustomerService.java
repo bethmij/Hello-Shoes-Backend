@@ -22,4 +22,8 @@ public interface CustomerService {
     String getCustomerCode();
 
     void setLevel();
+
+    List<CustomersDTO> getCustomersWithBirthdaysToday();
+
+    void saveBirthdayWishDate(CustomersDTO customersDTO);
 }

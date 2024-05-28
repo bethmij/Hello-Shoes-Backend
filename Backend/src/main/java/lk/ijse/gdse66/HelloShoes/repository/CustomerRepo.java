@@ -16,6 +16,14 @@ public interface CustomerRepo extends JpaRepository<Customers,String> {
     List<String> findAllIds();
 
 
+
+    @Query(value = "SELECT * FROM customers c WHERE DATE(c.dob) = DATE(NOW()) AND (c.birthday_wish IS NULL OR c.birthday_wish < DATE_SUB(CURRENT_DATE, INTERVAL 1 YEAR))", nativeQuery = true)
+    List<Customers> findCustomersWithBirthdaysToday();
+//    @Query(value = "SELECT * FROM customers c WHERE DATE(c.dob) = DATE(NOW())", nativeQuery = true)
+//    List<Customers> findCustomersWithBirthdaysToday();
+
+
+
 //    boolean existsByEmail(String email);
 //
 //    Customers findByEmail(String email);
