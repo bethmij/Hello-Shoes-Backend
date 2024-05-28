@@ -34,7 +34,7 @@ public class AdminPanel {
     @Column(name = "total_profit", nullable = false)
     private double totalProfit;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "most_sale_item", referencedColumnName = "item_code")
     private Inventory inventory;
 
