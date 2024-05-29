@@ -33,7 +33,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDTO> getAllUsers() {
         return userRepo.findAll().stream()
-                .map(user -> transformer.fromUserEntity(user)).toList();
+
+                .map(user -> {
+                            Employee employee = employeeRepo.findByEmail(user.getUsername());
+                            UserDTO userDTO = transformer.fromUserEntity(user);
+                            userDTO.setEmployeeID(employee.getEmployeeCode());
+                            userDTO.setEmployeeName(employee.getEmployeeName());
+                            userDTO.setProfilePic(employee.getProfilePic());
+                            userDTO.setEmail(employee.getEmail());
+                            return userDTO;
+
+                        }
+                ).toList();
     }
 
     @Override

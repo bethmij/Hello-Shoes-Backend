@@ -22,5 +22,9 @@ public class UserDTO {
 
     @NotNull(message = "role can not be null")
     private Role role;
+
+    private String profilePic;
+    private String employeeName;
+    private String employeeID;
     
 }

@@ -33,6 +33,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Role role;
 
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         HashSet<GrantedAuthority> authorities = new HashSet<>();
