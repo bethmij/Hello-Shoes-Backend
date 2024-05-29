@@ -57,7 +57,7 @@ public class Customers {
     private String addressLine05;
 
     @Column(name = "contact_no", length = 10, nullable = false)
-    private int contactNo;
+    private String contactNo;
 
     private String email;
 

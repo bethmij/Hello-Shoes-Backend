@@ -41,9 +41,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userRepo.findByEmployee_Email(signInRequest.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
         String generatedToken = jwtService.generateToken(user);
+        Employee employee = employeeRepo.findByEmail(signInRequest.getEmail());
         return JwtAuthResponse.builder()
                 .token(generatedToken)
                 .role(user.getRole())
+                .name(employee.getEmployeeName())
+                .profilePic(employee.getProfilePic())
                 .build();
     }
 
@@ -69,6 +72,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return JwtAuthResponse.builder()
                 .token(generatedToken)
                 .role(userEntity.getRole())
+                .name(employee.getEmployeeName())
+                .profilePic(employee.getProfilePic())
                 .build();
     }
 }
