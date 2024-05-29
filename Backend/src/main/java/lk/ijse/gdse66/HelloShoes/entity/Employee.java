@@ -67,10 +67,10 @@ public class Employee {
     private String addressLine05;
 
     @Column(name = "contact_no", length = 10, nullable = false)
-    private int contactNo;
+    private String contactNo;
 
     @Column(name = "emergency_contact", length = 10, nullable = false)
-    private int emergencyContact;
+    private String emergencyContact;
 
     @Column(nullable = false, unique = true)
     private String email;
