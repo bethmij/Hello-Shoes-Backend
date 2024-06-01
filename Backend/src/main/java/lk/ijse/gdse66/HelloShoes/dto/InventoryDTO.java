@@ -6,25 +6,29 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class InventoryDTO {
 
     @NotBlank(message = "item code can not be null")
-    @Pattern(regexp = "I00-[0-9]{3}", message = "item code is not valid")
+//    @Pattern(regexp = "I00-[0-9]{3}", message = "item code is not valid")
     private String itemCode;
 
     private String itemDesc;
     private String itemPicture;
+
+    private Map<String, Integer> itemSizeList;
 
     private int itemQty;
 
     @NotBlank(message = "category can not be null")
     private String category;
 
-    @Digits(integer = Integer.MAX_VALUE, fraction = 0, message = "size must be a valid integer")
-    private int size;
+//    @Digits(integer = Integer.MAX_VALUE, fraction = 0, message = "size must be a valid integer")
+//    private int size;
 
     @NotBlank(message = "supplier code can not be null")
     private String supplierCode;

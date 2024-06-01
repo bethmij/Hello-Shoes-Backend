@@ -1,9 +1,12 @@
 package lk.ijse.gdse66.HelloShoes.service.impl;
 
 import lk.ijse.gdse66.HelloShoes.dto.InventoryDTO;
+import lk.ijse.gdse66.HelloShoes.dto.ItemSizeDTO;
 import lk.ijse.gdse66.HelloShoes.entity.Inventory;
+import lk.ijse.gdse66.HelloShoes.entity.ItemSize;
 import lk.ijse.gdse66.HelloShoes.entity.Suppliers;
 import lk.ijse.gdse66.HelloShoes.repository.InventoryRepo;
+import lk.ijse.gdse66.HelloShoes.repository.ItemSizeRepo;
 import lk.ijse.gdse66.HelloShoes.repository.SupplierRepo;
 import lk.ijse.gdse66.HelloShoes.service.InventoryService;
 import lk.ijse.gdse66.HelloShoes.service.exception.NotFoundException;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -31,6 +35,9 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Autowired
     GenerateID generateID;
+
+    @Autowired
+    ItemSizeRepo itemSizeRepo;
 
 
     @Override
@@ -71,16 +78,34 @@ public class InventoryServiceImpl implements InventoryService {
 //            throw new NotFoundException("Supplier Code: " + inventoryDTO.getSupplierCode() + " exist");
 //        }
 
-        inventoryDTO.setItemCode(generateID.generateItemCode());
+//        inventoryDTO.setItemCode(generateID.generateItemCode());
 
         Suppliers suppliers = supplierRepo.findBySupplierCode(inventoryDTO.getSupplierCode());
 
         Inventory inventory = transformer.toInventoryEntity(inventoryDTO);
         inventory.setSuppliers(suppliers);
         inventory.setSupplierName(suppliers.getSupplierName());
+
+
         setItemStatus();
-        return transformer.fromInventoryEntity(
-                inventoryRepo.save(inventory));
+        setItemQuantity();
+
+        int total=0;
+        for (Map.Entry<String, Integer> entry : inventoryDTO.getItemSizeList().entrySet()) {
+            total+=entry.getValue();
+        }
+        inventory.setItemQty(total);
+        inventoryRepo.save(inventory);
+
+
+        for (Map.Entry<String, Integer> entry : inventoryDTO.getItemSizeList().entrySet()) {
+            ItemSize itemSize = new ItemSize(entry.getKey(), entry.getValue());
+            itemSize.setItem(inventory);
+
+            itemSizeRepo.save(itemSize);
+        }
+
+        return transformer.fromInventoryEntity(inventory);
 
 
     }
@@ -97,6 +122,7 @@ public class InventoryServiceImpl implements InventoryService {
         inventory.setSuppliers(suppliers);
         inventory.setSupplierName(suppliers.getSupplierName());
         setItemStatus();
+        setItemQuantity();
         inventoryRepo.save(inventory);
     }
 
@@ -120,7 +146,8 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public String getItemCode() {
-        return generateID.generateItemCode();
+//        return generateID.generateItemCode();
+        return null;
     }
 
     @Override
@@ -147,6 +174,32 @@ public class InventoryServiceImpl implements InventoryService {
                         }
                 ).toList();
     }
+
+    @Override
+    public void setItemQuantity() {
+        List<Inventory> inventories = inventoryRepo.findAll().stream()
+                .map(inventory -> {
+                            int totalQty = 0;
+                            List<ItemSize> item = itemSizeRepo.findByItem_ItemCode(inventory.getItemCode());
+                            for (ItemSize itemSize : item) {
+                                totalQty += itemSize.getQuantity();
+                            }
+                            inventory.setItemQty(totalQty);
+                            inventoryRepo.save(inventory);
+                            return inventory;
+                        }
+                ).toList();
+
+
+    }
+
+    @Override
+    public List<ItemSizeDTO> getItemSizes(String itemCode) {
+        return itemSizeRepo.findByItem_ItemCode(itemCode).stream()
+                .map(itemSizes -> transformer.fromItemSizes(itemSizes))
+                .toList();
+    }
+
 
 //    @Override
 //    public List<String> GetSupplierCode() {

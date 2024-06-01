@@ -32,7 +32,7 @@ public class Inventory {
 
     private String category;
 
-    private int size;
+//    private int size;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "supplier_code", referencedColumnName = "supplier_code")
@@ -62,6 +62,9 @@ public class Inventory {
     @OneToMany(mappedBy = "inventory")
     private Set<SaleInventory> saleInventories = new HashSet<>();
 
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = false)
+    private Set<ItemSize> sizes = new HashSet<>();
     public Inventory(String itemCode) {
         this.itemCode = itemCode;
     }
