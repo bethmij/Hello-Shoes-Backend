@@ -54,6 +54,10 @@ public class SaleServiceImpl implements SaleService {
     @Autowired
     SupplierRepo supplierRepo;
 
+    @Autowired
+    ItemSizeRepo itemSizeRepo;
+
+
 
     @Override
     public List<SaleServiceDTO> getAllSaleService() {
@@ -102,7 +106,7 @@ public class SaleServiceImpl implements SaleService {
                     SaleInventoryDTO saleInventoryDTO = transformer.fromSaleInventoryEntity(saleInventory);
                     saleInventoryDTO.setItemCode(saleInventory.getInventory().getItemCode());
                     saleInventoryDTO.setOrderID(saleInventory.getSaleService().getOrderID());
-                    saleInventoryDTO.setSize(saleInventory.getInventory().getSize());
+//                    saleInventoryDTO.setSize(saleInventory.getInventory().getSize());
                     saleInventoryDTO.setSaleUnitPrice(saleInventory.getInventory().getSaleUnitPrice());
                     saleInventoryDTO.setItemDesc(saleInventory.getInventory().getItemDesc());
                     saleInventoryDTO.setItemQuantity(saleInventory.getQty());
@@ -160,9 +164,11 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public void refundItems(RefundDTO refundDTO) {
-        Inventory inventory = inventoryRepo.findById(refundDTO.getItemCode()).get();
+        List<Inventory> inventories = inventoryRepo.findByItemCode(refundDTO.getItemCode());
+        Inventory inventory = inventories.isEmpty() ? null : inventories.get(0);
         SaleServiceEntity order = saleServiceRepo.findById(refundDTO.getOrderID()).get();
 
+        assert inventory != null;
         order.setTotalPrice(order.getTotalPrice() - inventory.getSaleUnitPrice());
         saleServiceRepo.save(order);
 
@@ -191,84 +197,238 @@ public class SaleServiceImpl implements SaleService {
 //    }
 
 
+//    private SaleServiceEntity saveOrder(SaleServiceDTO saleServiceDTO) {
+//
+//        SaleServiceEntity saleService = transformer.toSaleServiceEntity(saleServiceDTO);
+//
+//        if(!saleServiceDTO.getCustomerName().isEmpty()) {
+//            Customers customers = customerRepo.findByCustomerName(saleServiceDTO.getCustomerName());
+//            if (customers == null) {
+//                throw new ServiceException("Customer not found: " + saleServiceDTO.getCustomerName());
+//            }
+//            saleService.setCustomers(customers);
+//
+//            if(saleServiceDTO.getTotalPrice() >= 800){
+//                customers.setTotalPoints(customers.getTotalPoints()+1);
+//                saleService.setAddedPoints(1);
+//            }
+//            customerRepo.save(customers);
+//        }
+//
+//
+//        Employee employee = employeeRepo.findByEmployeeName(saleServiceDTO.getCashier());
+//        if (employee == null) {
+//            throw new ServiceException("Employee not found: " + saleServiceDTO.getCashier());
+//        }
+//
+//        saleService.setEmployee(employee);
+//        saleServiceRepo.save(saleService);
+//
+//        int totalSales = 0;
+//        String mostSaleItem = saleServiceDTO.getInventoryList().keySet().iterator().next();
+//        int mostSaleQty = 0;
+//
+//        for (Map.Entry<String, ItemSizeDTO> entry : saleServiceDTO.getInventoryList().entrySet()) {
+//            Inventory inventory = inventoryRepo.findById(entry.getKey()).orElse(null);
+//            if (inventory == null) {
+//                throw new ServiceException("Inventory not found: " + entry.getKey());
+//            }
+//
+//            SaleInventory saleInventory = new SaleInventory();
+//            saleInventory.setSaleService(saleService);
+//            saleInventory.setInventory(inventory);
+//            saleInventory.setQty(entry.getValue().getQuantity());
+//            saleInventory.setPrize(entry.getValue().getQuantity() * inventory.getSaleUnitPrice());
+//            saleInventoryRepo.save(saleInventory);
+//
+//            ItemSize itemSize = itemSizeRepo.findByItem_ItemCodeAndAndSize(entry.getKey(), entry.getValue().getSize());
+//            if (itemSize == null) {
+//                throw new ServiceException("Item Sizes not found ");
+//            }
+//            int updatedQty = itemSize.getQuantity() - entry.getValue().getQuantity();
+//            if (updatedQty < 0) {
+//                throw new ServiceException("Insufficient inventory for item: " + inventory.getItemCode());
+//            }
+//
+//            InventoryDTO inventoryDTO = transformer.fromInventoryEntity(inventory);
+//
+//
+//            inventoryDTO.setItemQty(inventory.getItemQty() - entry.getValue().getQuantity());
+//
+//
+//            Suppliers suppliers = supplierRepo.findBySupplierName(inventoryDTO.getSupplierName());
+//            if (suppliers == null) {
+//                throw new ServiceException("Supplier not found: " + inventoryDTO.getSupplierName());
+//            }
+//            inventoryDTO.setSupplierCode(suppliers.getSupplierCode());
+//
+//
+//            itemSize.setItem(inventory);
+//            itemSize.setQuantity(updatedQty);
+//            System.out.println(itemSize);
+//
+//            inventoryService.updateInventory(inventoryDTO);
+////            itemSizeRepo.save(itemSize);
+//        }
+//
+//        LocalDate today = LocalDate.now();
+//        Date todayAsDate = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
+//        AdminPanel adminPanel = adminPanelRepo.findByDate(todayAsDate);
+//
+//        AdminPanelDTO adminPanelDTO = new AdminPanelDTO();
+//
+//        adminPanelDTO.setDate(new java.sql.Date(todayAsDate.getTime()));
+//
+//
+//        Map<String, Integer> itemQuantityMap = new HashMap<>();
+//
+//        // Calculate totalSales and mostSaleItemQty from saleInventoryList
+//        List<SaleInventory> saleInventoryList = saleInventoryRepo.findByPurchase_data(todayAsDate);
+//        for (SaleInventory saleInventory : saleInventoryList) {
+//            String item = saleInventory.getInventory().getItemCode();
+//            int quantity = saleInventory.getQty();
+//            itemQuantityMap.put(item, itemQuantityMap.getOrDefault(item, 0) + quantity);
+//
+//
+//            totalSales += quantity;
+//            if (quantity > mostSaleQty) {
+//                mostSaleQty = quantity;
+//                mostSaleItem = item;
+//            }
+//        }
+//
+//        // Calculate totalSales and mostSaleItemQty from saleServiceDTO.getInventoryList()
+//        for (Map.Entry<String, ItemSizeDTO> entry : saleServiceDTO.getInventoryList().entrySet()) {
+//            String item = entry.getKey();
+//            int quantity = entry.getValue().getQuantity();
+//            itemQuantityMap.put(item, itemQuantityMap.getOrDefault(item, 0) + quantity);
+//
+//            // Update totalSales and mostSaleItemQty
+//            totalSales += quantity;
+//            if (quantity > mostSaleQty) {
+//                mostSaleQty = quantity;
+//                mostSaleItem = item;
+//            }
+//        }
+//
+//        adminPanelDTO.setTotalSales(totalSales);
+//        adminPanelDTO.setMostSaleItemQty(itemQuantityMap.getOrDefault(mostSaleItem, mostSaleQty));
+//        adminPanelDTO.setMostSaleItem(mostSaleItem);
+//
+//        if (adminPanel == null) {
+//            adminPanelDTO.setTotalProfit(saleServiceDTO.getTotalPrice());
+//            adminPanel = transformer.toAdminPanelEntity(adminPanelDTO);
+//
+//
+//        } else {
+//
+//            adminPanel.setInventory(new Inventory(adminPanelDTO.getMostSaleItem()));
+//            adminPanel.setMostSaleItemQty(adminPanelDTO.getMostSaleItemQty());
+//            adminPanel.setTotalSales(adminPanelDTO.getTotalSales());
+//            adminPanel.setTotalProfit(adminPanel.getTotalProfit() + saleServiceDTO.getTotalPrice());
+//        }
+//
+//        adminPanelRepo.save(adminPanel);
+//
+//
+//
+//        return saleService;
+//    }
+
     private SaleServiceEntity saveOrder(SaleServiceDTO saleServiceDTO) {
 
+        // Transform DTO to Entity
         SaleServiceEntity saleService = transformer.toSaleServiceEntity(saleServiceDTO);
 
-        if(!saleServiceDTO.getCustomerName().isEmpty()) {
+        // Handle customer-related logic
+        if (!saleServiceDTO.getCustomerName().isEmpty()) {
             Customers customers = customerRepo.findByCustomerName(saleServiceDTO.getCustomerName());
             if (customers == null) {
                 throw new ServiceException("Customer not found: " + saleServiceDTO.getCustomerName());
             }
             saleService.setCustomers(customers);
 
-            if(saleServiceDTO.getTotalPrice() >= 800){
-                customers.setTotalPoints(customers.getTotalPoints()+1);
+            if (saleServiceDTO.getTotalPrice() >= 800) {
+                customers.setTotalPoints(customers.getTotalPoints() + 1);
                 saleService.setAddedPoints(1);
             }
             customerRepo.save(customers);
         }
 
-
+        // Handle employee-related logic
         Employee employee = employeeRepo.findByEmployeeName(saleServiceDTO.getCashier());
         if (employee == null) {
             throw new ServiceException("Employee not found: " + saleServiceDTO.getCashier());
         }
-
         saleService.setEmployee(employee);
         saleServiceRepo.save(saleService);
 
+        // Variables for tracking total sales and most sold item
         int totalSales = 0;
         String mostSaleItem = saleServiceDTO.getInventoryList().keySet().iterator().next();
         int mostSaleQty = 0;
 
-        for (Map.Entry<String, Integer> entry : saleServiceDTO.getInventoryList().entrySet()) {
-            Inventory inventory = inventoryRepo.findById(entry.getKey()).orElse(null);
+        // Handle inventory-related logic
+        for (Map.Entry<String, ItemSizeDTO> entry : saleServiceDTO.getInventoryList().entrySet()) {
+            String itemCode = entry.getKey();
+            ItemSizeDTO itemSizeDTO = entry.getValue();
+
+            // Find inventory by ID
+            Inventory inventory = inventoryRepo.findById(itemCode).orElse(null);
             if (inventory == null) {
-                throw new ServiceException("Inventory not found: " + entry.getKey());
+                throw new ServiceException("Inventory not found: " + itemCode);
             }
 
+            // Create and save SaleInventory entity
             SaleInventory saleInventory = new SaleInventory();
             saleInventory.setSaleService(saleService);
             saleInventory.setInventory(inventory);
-            saleInventory.setQty(entry.getValue());
-            saleInventory.setPrize(entry.getValue() * inventory.getSaleUnitPrice());
+            saleInventory.setQty(itemSizeDTO.getQuantity());
+            saleInventory.setPrize(itemSizeDTO.getQuantity() * inventory.getSaleUnitPrice());
             saleInventoryRepo.save(saleInventory);
 
-            int updatedQty = inventory.getItemQty() - entry.getValue();
+            // Find ItemSize by item code and size
+            ItemSize itemSize = itemSizeRepo.findByItem_ItemCodeAndAndSize(itemCode, itemSizeDTO.getSize());
+            if (itemSize == null) {
+                throw new ServiceException("Item Sizes not found for item: " + itemCode);
+            }
+
+            // Update item quantity and validate
+            int updatedQty = itemSize.getQuantity() - itemSizeDTO.getQuantity();
             if (updatedQty < 0) {
                 throw new ServiceException("Insufficient inventory for item: " + inventory.getItemCode());
             }
 
-            InventoryDTO inventoryDTO = transformer.fromInventoryEntity(inventory);
-            inventoryDTO.setItemQty(updatedQty);
+            itemSize.setQuantity(updatedQty);
+            itemSizeRepo.save(itemSize); // Ensure to save the updated item size
 
+            // Update inventory quantity and supplier info
+            InventoryDTO inventoryDTO = transformer.fromInventoryEntity(inventory);
+            inventoryDTO.setItemQty(inventory.getItemQty() - itemSizeDTO.getQuantity());
             Suppliers suppliers = supplierRepo.findBySupplierName(inventoryDTO.getSupplierName());
             if (suppliers == null) {
                 throw new ServiceException("Supplier not found: " + inventoryDTO.getSupplierName());
             }
             inventoryDTO.setSupplierCode(suppliers.getSupplierCode());
+
+            // Update inventory in the service
             inventoryService.updateInventory(inventoryDTO);
         }
 
+        // Calculate sales for admin panel
         LocalDate today = LocalDate.now();
         Date todayAsDate = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
         AdminPanel adminPanel = adminPanelRepo.findByDate(todayAsDate);
 
         AdminPanelDTO adminPanelDTO = new AdminPanelDTO();
-
         adminPanelDTO.setDate(new java.sql.Date(todayAsDate.getTime()));
 
-
         Map<String, Integer> itemQuantityMap = new HashMap<>();
-
-        // Calculate totalSales and mostSaleItemQty from saleInventoryList
         List<SaleInventory> saleInventoryList = saleInventoryRepo.findByPurchase_data(todayAsDate);
         for (SaleInventory saleInventory : saleInventoryList) {
             String item = saleInventory.getInventory().getItemCode();
             int quantity = saleInventory.getQty();
             itemQuantityMap.put(item, itemQuantityMap.getOrDefault(item, 0) + quantity);
-
 
             totalSales += quantity;
             if (quantity > mostSaleQty) {
@@ -277,13 +437,11 @@ public class SaleServiceImpl implements SaleService {
             }
         }
 
-        // Calculate totalSales and mostSaleItemQty from saleServiceDTO.getInventoryList()
-        for (Map.Entry<String, Integer> entry : saleServiceDTO.getInventoryList().entrySet()) {
+        for (Map.Entry<String, ItemSizeDTO> entry : saleServiceDTO.getInventoryList().entrySet()) {
             String item = entry.getKey();
-            int quantity = entry.getValue();
+            int quantity = entry.getValue().getQuantity();
             itemQuantityMap.put(item, itemQuantityMap.getOrDefault(item, 0) + quantity);
 
-            // Update totalSales and mostSaleItemQty
             totalSales += quantity;
             if (quantity > mostSaleQty) {
                 mostSaleQty = quantity;
@@ -298,10 +456,7 @@ public class SaleServiceImpl implements SaleService {
         if (adminPanel == null) {
             adminPanelDTO.setTotalProfit(saleServiceDTO.getTotalPrice());
             adminPanel = transformer.toAdminPanelEntity(adminPanelDTO);
-
-
         } else {
-
             adminPanel.setInventory(new Inventory(adminPanelDTO.getMostSaleItem()));
             adminPanel.setMostSaleItemQty(adminPanelDTO.getMostSaleItemQty());
             adminPanel.setTotalSales(adminPanelDTO.getTotalSales());
@@ -310,10 +465,9 @@ public class SaleServiceImpl implements SaleService {
 
         adminPanelRepo.save(adminPanel);
 
-
-
         return saleService;
     }
+
 
     private LocalDate convertToLocalDate(Date date) {
         return Instant.ofEpochMilli(date.getTime())

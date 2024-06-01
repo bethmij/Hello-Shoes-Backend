@@ -20,7 +20,7 @@ public class RefundDTO {
     private String orderID;
 
     @NotBlank(message = "item code can not be null")
-    @Pattern(regexp = "I00-[0-9]{3}", message = "item code is not valid")
+//    @Pattern(regexp = "I00-[0-9]{3}", message = "item code is not valid")
     private String itemCode;
 
     private Date purchaseDate;

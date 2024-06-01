@@ -66,6 +66,14 @@ public class Transformer {
 
     public SaleInventory toSaleInventoryEntity(SaleInventoryDTO saleInventoryDTO){
         return mapper.map(saleInventoryDTO, SaleInventory.class);
+
+
     }
+
+    public ItemSize toItemSizes(ItemSizeDTO itemSizeDTO){
+        return mapper.map(itemSizeDTO, ItemSize.class);
+    }
+
+    public ItemSizeDTO fromItemSizes(ItemSize itemSize){return mapper.map(itemSize, ItemSizeDTO.class);}
 
 }

@@ -19,7 +19,7 @@ public class SaleServiceDTO {
     @Pattern(regexp = "OR00-[0-9]{3}", message = "item code is not valid")
     private String orderID;
 
-    private Map<String, Integer> inventoryList;
+    private Map<String, ItemSizeDTO> inventoryList;
 
     private String customerCode;
 

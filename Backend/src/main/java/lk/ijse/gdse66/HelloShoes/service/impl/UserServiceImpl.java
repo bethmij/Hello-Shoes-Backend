@@ -49,11 +49,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserDetails(String email) {
-        if (userRepo.existsByEmployee_Email(email)) {
+        if (!userRepo.existsByEmployee_Email(email)) {
             throw new NotFoundException("User email: " + email + " does not exist");
         }
+        UserDTO user = transformer.fromUserEntity( userRepo.findByEmployee_Email(email).get());
 
-        return transformer.fromUserEntity(userRepo.findByEmployee_Email(email).get());
+        Employee employee = employeeRepo.findByEmail(email);
+        user.setEmployeeID(employee.getEmployeeCode());
+        user.setEmployeeName(employee.getEmployeeName());
+        user.setProfilePic(employee.getProfilePic());
+        user.setEmail(employee.getEmail());
+        return user;
 
     }
 
@@ -75,7 +81,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(UserDTO userDTO) {
-        if (userRepo.existsByEmployee_Email(userDTO.getEmail())) {
+        if (!userRepo.existsByEmployee_Email(userDTO.getEmail())) {
             throw new NotFoundException("User email: " + userDTO.getEmail() + " does not exist");
         }
 
@@ -89,7 +95,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(String email) {
-        if (userRepo.existsByEmployee_Email(email)) {
+        if (!userRepo.existsByEmployee_Email(email)) {
             throw new NotFoundException("User email: " + email + " does not exist");
         }
         userRepo.deleteByEmployee_Email(email);
