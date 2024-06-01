@@ -62,6 +62,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (!customerRepo.existsById(customersDTO.getCustomerCode())) {
             throw new NotFoundException("Customer Code: " + customersDTO.getCustomerCode() + " does not exist");
         }
+        customersDTO.setLevel(Level.NEW);
         setLevel();
         customerRepo.save(transformer.toCustomerEntity(customersDTO));
     }

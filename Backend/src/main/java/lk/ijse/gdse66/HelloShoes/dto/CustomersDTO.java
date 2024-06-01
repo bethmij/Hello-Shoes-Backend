@@ -29,7 +29,7 @@ public class CustomersDTO {
     @JsonFormat(pattern = "yyyyMMdd")
     private Date loyaltyJoinedDate;
     private Level level;
-//    private int totalPoints;
+    private int totalPoints;
 
     @JsonFormat(pattern = "yyyyMMdd")
     private Date dob;

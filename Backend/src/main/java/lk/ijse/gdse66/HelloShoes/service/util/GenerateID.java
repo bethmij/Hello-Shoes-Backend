@@ -58,17 +58,17 @@ public class GenerateID {
         }
     }
 
-    public  String generateItemCode() {
-
-        try {
-            String last_id =  inventoryRepo.findFirstByOrderByItemCodeDesc().getItemCode();
-            int latest_id = Integer.parseInt(last_id.split("I00-")[1])+1;
-            return "I00-"+String.format("%03d",latest_id);
-
-        } catch (NullPointerException e) {
-            return "I00-001";
-        }
-    }
+//    public  String generateItemCode() {
+//
+//        try {
+//            String last_id =  inventoryRepo.findFirstByOrderByItemCodeDesc().getItemCode();
+//            int latest_id = Integer.parseInt(last_id.split("I00-")[1])+1;
+//            return "I00-"+String.format("%03d",latest_id);
+//
+//        } catch (NullPointerException e) {
+//            return "I00-001";
+//        }
+//    }
 
     public  String generateSaleCode() {
 

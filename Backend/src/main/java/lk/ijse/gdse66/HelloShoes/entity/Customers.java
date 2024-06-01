@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lk.ijse.gdse66.HelloShoes.service.util.enums.Gender;
 import lk.ijse.gdse66.HelloShoes.service.util.enums.Level;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
@@ -71,7 +74,7 @@ public class Customers {
     @JsonFormat(pattern = "yyyyMMdd")
     private Date birthdayWish;
 
-//    @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
 //    private List<SaleServiceEntity> saleServiceEntities = new ArrayList<>();
 
 }
