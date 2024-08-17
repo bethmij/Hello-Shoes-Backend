@@ -1974,3 +1974,6 @@ java.sql.SQLIntegrityConstraintViolationException: Duplicate entry 'OR00-003' fo
 
 2024-08-17T19:16:30.894+05:30  WARN 452080 --- [Hello-Shoes] [http-nio-8080-exec-8] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [lk.ijse.gdse66.HelloShoes.service.exception.ServiceException: Insufficient inventory for item: CSW00001]
 2024-08-17T19:16:58.644+05:30  WARN 452080 --- [Hello-Shoes] [http-nio-8080-exec-7] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [lk.ijse.gdse66.HelloShoes.service.exception.ServiceException: Insufficient inventory for item: CSW00001]
+2024-08-17T20:15:36.056+05:30  INFO 452080 --- [Hello-Shoes] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-08-17T20:15:36.064+05:30  INFO 452080 --- [Hello-Shoes] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-08-17T20:15:36.069+05:30  INFO 452080 --- [Hello-Shoes] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
