@@ -200,6 +200,21 @@ public class InventoryServiceImpl implements InventoryService {
                 .toList();
     }
 
+//    @Override
+//    public List<InventoryDTO> getAllSortedInventory(String value) {
+//
+//        if (value.equals("SM") || value.equals("SW")){
+//            return tranformer.convert(inventoryRepo.findByGender(value), Tranformer.ClassType.ITEM_DTO_LIST);
+//        }else if (value.equals("FS") || value.equals("CS")){
+//            return tranformer.convert(inventoryRepo.findByOccasion(value), Tranformer.ClassType.ITEM_DTO_LIST);
+//        }else if (value.equals("itemDesc") || value.equals("price")){
+//            return tranformer.convert(inventoryRepo.orderBy(value), Tranformer.ClassType.ITEM_DTO_LIST);
+//        }
+//        else{
+//            return null;
+//        }
+//    }
+
 
 //    @Override
 //    public List<String> GetSupplierCode() {

@@ -337,10 +337,8 @@ public class SaleServiceImpl implements SaleService {
 
     private SaleServiceEntity saveOrder(SaleServiceDTO saleServiceDTO) {
 
-        // Transform DTO to Entity
         SaleServiceEntity saleService = transformer.toSaleServiceEntity(saleServiceDTO);
 
-        // Handle customer-related logic
         if (!saleServiceDTO.getCustomerName().isEmpty()) {
             Customers customers = customerRepo.findByCustomerName(saleServiceDTO.getCustomerName());
             if (customers == null) {
@@ -368,12 +366,12 @@ public class SaleServiceImpl implements SaleService {
         String mostSaleItem = saleServiceDTO.getInventoryList().keySet().iterator().next();
         int mostSaleQty = 0;
 
-        // Handle inventory-related logic
+
         for (Map.Entry<String, ItemSizeDTO> entry : saleServiceDTO.getInventoryList().entrySet()) {
             String itemCode = entry.getKey();
             ItemSizeDTO itemSizeDTO = entry.getValue();
 
-            // Find inventory by ID
+
             Inventory inventory = inventoryRepo.findById(itemCode).orElse(null);
             if (inventory == null) {
                 throw new ServiceException("Inventory not found: " + itemCode);

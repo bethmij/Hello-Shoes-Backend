@@ -47,6 +47,8 @@ public class AdminPanelServiceImpl implements AdminPanelService {
 
     @Override
     public List<AdminPanelDTO> getAllAdminPanelByDate(LocalDate startDate, LocalDate endDate) {
+        System.out.println(startDate);
+        System.out.println(endDate);
         return adminPanelRepo.findWeekData(startDate,endDate).stream()
                 .map(adminPanel -> {
                     Inventory item = inventoryRepo.findById(adminPanel.getInventory().getItemCode()).get();
@@ -85,6 +87,8 @@ public class AdminPanelServiceImpl implements AdminPanelService {
     }
 
     public AdminPanelDTO getProfitForWeek(LocalDate startDate, LocalDate endDate) {
+        System.out.println(startDate);
+        System.out.println(endDate);
         AdminPanel adminPanel = adminPanelRepo.findSalesForWeek(startDate, endDate);
         Inventory item = inventoryRepo.findById(adminPanel.getInventory().getItemCode()).get();
 
@@ -97,11 +101,15 @@ public class AdminPanelServiceImpl implements AdminPanelService {
     }
 
     public Double getTotalProfitForWeek(LocalDate startDate, LocalDate endDate) {
+        System.out.println(startDate);
+        System.out.println(endDate);
         return adminPanelRepo.findTotalProfitForWeek(startDate, endDate);
     }
 
     @Override
     public Double findTotalSalesForWeek(LocalDate startDate, LocalDate endDate) {
+        System.out.println(startDate);
+        System.out.println(endDate);
         return adminPanelRepo.findTotalSalesForWeek(startDate, endDate);
     }
 
