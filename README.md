@@ -36,13 +36,5 @@ This web application - back-end using React is for a POS application for a shoe 
 ## Installation
 1. **Clone the repository:**
    ```bash
-   https://github.com/bethmij/Hello-Shoes-Frontend.git
+   https://github.com/bethmij/Hello-Shoes-Backend.git
 
-2. **Install dependencies:**
-   ```bash
-   npm install
-
-
-4. **Run the application:**
-   ```bash
-   npm run dev
